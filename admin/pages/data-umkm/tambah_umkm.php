@@ -1,3 +1,25 @@
+<?php
+require '../../../config/conn.php';
+
+// ambil kode UMKM terakhir
+$sql = "SELECT kode_umkm FROM data_umkm ORDER BY id_umkm DESC LIMIT 1";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+
+$lastKode = $stmt->fetchColumn();
+
+if ($lastKode) {
+    // ambil angka dari UM001 → 001
+    $lastNumber = (int) substr($lastKode, 2);
+    $newNumber = $lastNumber + 1;
+} else {
+    $newNumber = 1;
+}
+
+// format jadi UM001
+$kodeUMKM = 'UM' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -244,15 +266,28 @@
               <div class="card">
                 <div class="card-body">
   
-                    <form id="formUMKM" class="forms-sample" enctype="multipart/form-data" novalidate>
+                    <form id="formUMKM" 
+                          class="forms-sample" 
+                          enctype="multipart/form-data" 
+                          action="../../../config/config.php"
+                          method="POST"
+                          novalidate>
   
                     <div class="row">
   
+                    <!-- kode UMKM -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                          <label>Kode UMKM</label>
+                          <input type="text" class="form-control" name="kode_umkm" value="<?= $kodeUMKM ?>" readonly> 
+                        </div>
+                      </div>
+
                       <!-- NAMA UMKM -->
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>Nama UMKM</label>
-                          <input type="text" class="form-control" required>
+                          <input type="text" class="form-control" name="nama_umkm" required>
                           <div class="invalid-feedback">Nama UMKM wajib diisi</div>
                         </div>
                       </div>
@@ -261,7 +296,7 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>Nama Pemilik</label>
-                          <input type="text" class="form-control" required>
+                          <input type="text" class="form-control" name="nama_pemilik_umkm" required>
                           <div class="invalid-feedback">Nama pemilik wajib diisi</div>
                         </div>
                       </div>
@@ -270,7 +305,7 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>NIK</label>
-                          <input type="text" class="form-control" pattern="[0-9]{16}" required>
+                          <input type="text" class="form-control" name="nik_umkm" pattern="[0-9]{16}" required>
                           <div class="invalid-feedback">NIK harus 16 digit angka</div>
                         </div>
                       </div>
@@ -279,7 +314,7 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>No HP</label>
-                          <input type="text" class="form-control" pattern="08[0-9]{8,11}" required>
+                          <input type="text" class="form-control" name="no_hp_umkm" pattern="08[0-9]{8,11}" required>
                           <div class="invalid-feedback">Masukkan nomor HP yang valid</div>
                         </div>
                       </div>
@@ -288,7 +323,7 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>Email</label>
-                          <input type="email" class="form-control" required>
+                          <input type="email" class="form-control" name="email_umkm" required>
                           <div class="invalid-feedback">Email tidak valid</div>
                         </div>
                       </div>
@@ -297,7 +332,7 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>Jenis Usaha</label>
-                          <select class="form-select" required>
+                          <select class="form-select" name="jenis_usaha" required>
                             <option value="">Pilih</option>
                             <option>Kuliner</option>
                             <option>Fashion</option>
@@ -312,7 +347,7 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>Kategori Usaha</label>
-                          <select class="form-select" required>
+                          <select class="form-select" name="kategori_usaha" required>
                             <option value="">Pilih</option>
                             <option>Mikro</option>
                             <option>Kecil</option>
@@ -323,10 +358,10 @@
                       </div>
   
                       <!-- WILAYAH -->
-                      <div class="col-md-6">
+                      <div class="col-md-12">
                         <div class="form-group">
                           <label>Wilayah</label>
-                          <select class="form-select" required>
+                          <select class="form-select" name="wilayah_umkm" required>
                             <option value="">Pilih Wilayah</option>
                           </select>
                           <div class="invalid-feedback">Wilayah wajib dipilih</div>
@@ -337,7 +372,7 @@
                       <div class="col-md-4">
                         <div class="form-group">
                           <label>Kelurahan</label>
-                          <input type="text" class="form-control" required>
+                          <input type="text" class="form-control" name="kelurahan_umkm" required>
                           <div class="invalid-feedback">Kelurahan wajib diisi</div>
                         </div>
                       </div>
@@ -346,7 +381,7 @@
                       <div class="col-md-4">
                         <div class="form-group">
                           <label>RT</label>
-                          <input type="text" class="form-control" required>
+                          <input type="text" class="form-control" name="rt_umkm" required>
                           <div class="invalid-feedback">RT wajib diisi</div>
                         </div>
                       </div>
@@ -355,7 +390,7 @@
                       <div class="col-md-4">
                         <div class="form-group">
                           <label>RW</label>
-                          <input type="text" class="form-control" required>
+                          <input type="text" class="form-control" name="rw_umkm" required>
                           <div class="invalid-feedback">RW wajib diisi</div>
                         </div>
                       </div>
@@ -364,7 +399,7 @@
                       <div class="col-md-12">
                         <div class="form-group">
                           <label>Alamat UMKM</label>
-                          <textarea class="form-control" rows="3" required></textarea>
+                          <textarea class="form-control" rows="3" name="alamat_umkm" required></textarea>
                           <div class="invalid-feedback">Alamat wajib diisi</div>
                         </div>
                       </div>
@@ -374,6 +409,7 @@
                             <div class="form-group">
                             <label>Foto UMKM</label>
                             <input type="file"
+                                    name="foto_umkm"
                                     class="form-control"
                                     id="fotoUMKM"
                                     accept="image/png, image/jpeg"
