@@ -47,12 +47,10 @@
         <ul class="nav">
           <li class="nav-item nav-profile border-bottom">
             <a href="#" class="nav-link flex-column">
-              <div class="brand-logo">
-                <img src="../assets/images/logo.svg">
-              </div>
+              <img class="sidebar-brand-logo" src="../assets/images/logo.png" alt="">
+              <!--<img class="sidebar-brand-logomini" src="../assets/images/logo-mini.png" alt="">-->
               <div class="nav-profile-text d-flex ms-0 mb-3 flex-column">
                 <span class="fw-semibold mb-1 mt-2 text-center">Antonio Olson</span>
-                <span class="text-secondary icon-sm text-center">$3499.00</span>
               </div>
             </a>
           </li>
@@ -67,76 +65,63 @@
             </form>
           </li>
           <li class="pt-2 pb-1">
-            <span class="nav-item-head">Template Pages</span>
+            <span class="nav-item-head">Menu Utama</span>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="index.html">
               <i class="mdi mdi-compass-outline menu-icon"></i>
-              <span class="menu-title">Dashboard</span>
+              <span class="menu-title">Beranda</span>
             </a>
-          </li>
-          <li class="pt-2 pb-1">
-            <span class="nav-item-head">UI Elements</span>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-              <i class="mdi mdi-crosshairs-gps menu-icon"></i>
-              <span class="menu-title">UI Elements</span>
+              <i class="mdi mdi-store menu-icon"></i>
+              <span class="menu-title">Data UMKM</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="ui-basic">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../pages/ui-features/buttons.html">Buttons</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../pages/ui-features/dropdowns.html">Dropdowns</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../pages/ui-features/typography.html">Typography</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/data-umkm/tambah_umkm.html">Tambah Data</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/data-umkm/data_umkm.html">Data UMKM</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/data-umkm/detail_umkm.html">Detail UMKM</a></li>
               </ul>
             </div>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
-              <i class="mdi mdi-contacts menu-icon"></i>
-              <span class="menu-title">Icons</span>
+              <i class="mdi mdi-account-group menu-icon"></i>
+              <span class="menu-title">Operator</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="icons">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../pages/icons/font-awesome.html">Font Awesome</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/operator/operator.html">Daftar Operator</a></li>
               </ul>
             </div>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#forms" aria-expanded="false" aria-controls="forms">
-              <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-              <span class="menu-title">Forms</span>
+              <i class="mdi mdi-database menu-icon"></i>
+              <span class="menu-title">Master Data</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="forms">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../pages/forms/basic_elements.html">Form Elements</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/master-data/jenis-data.html">Jenis Data</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/master-data/wilayah.html">Wilayah</a></li>
               </ul>
             </div>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
               <i class="mdi mdi-chart-bar menu-icon"></i>
-              <span class="menu-title">Charts</span>
+              <span class="menu-title">Laporan</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="charts">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../pages/charts/chartjs.html">ChartJs</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
-              <i class="mdi mdi-table-large menu-icon"></i>
-              <span class="menu-title">Tables</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="tables">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../pages/tables/basic-table.html">Basic Table</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/laporan/lap-umkm.html">Data UMKM</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/laporan/lap-operator.html">Data Operator</a></li>
               </ul>
             </div>
           </li>
@@ -148,19 +133,10 @@
             </a>
             <div class="collapse" id="auth">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../pages/samples/blank-page.html"> Blank Page </a></li>
-                <li class="nav-item"> <a class="nav-link" href="../pages/samples/login.html"> Login </a></li>
-                <li class="nav-item"> <a class="nav-link" href="../pages/samples/register.html"> Register </a></li>
-                <li class="nav-item"> <a class="nav-link" href="../pages/samples/error-404.html"> 404 </a></li>
-                <li class="nav-item"> <a class="nav-link" href="../pages/samples/error-500.html"> 500 </a></li>
+                <li class="nav-item"> <a class="nav-link" href="../pages/samples/blank-page.html"> Profil </a></li>
+                <li class="nav-item"> <a class="nav-link" href="../pages/samples/login.html"> Log Out </a></li>
               </ul>
             </div>
-          </li>
-          <li class="nav-item pt-3">
-            <a class="nav-link" href="../docs/documentation.html" target="_blank">
-              <i class="mdi mdi-file-document-box menu-icon"></i>
-              <span class="menu-title">Documentation</span>
-            </a>
           </li>
         </ul>
       </nav>
@@ -173,49 +149,9 @@
               <span class="mdi mdi-chevron-double-left"></span>
             </button>
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-              <a class="navbar-brand brand-logo-mini" href="index.html"><img src="../assets/images/logo-mini.svg" alt="logo" /></a>
+              <a class="navbar-brand brand-logo-mini" href="index.html"><img src="../assets/images/logo-mini.png" alt="logo" /></a>
             </div>
             <ul class="navbar-nav">
-              <li class="nav-item dropdown">
-                <a class="nav-link" id="messageDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="mdi mdi-email-outline"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-left navbar-dropdown preview-list" aria-labelledby="messageDropdown">
-                  <h6 class="p-3 mb-0 fw-semibold">Messages</h6>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img src="../assets/images/faces/face1.jpg" alt="image" class="profile-pic">
-                    </div>
-                    <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                      <h6 class="preview-subject ellipsis mb-1 fw-normal">Mark send you a message</h6>
-                      <p class="text-gray mb-0"> 1 Minutes ago </p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img src="../../../assets/images/faces/face6.jpg" alt="image" class="profile-pic">
-                    </div>
-                    <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                      <h6 class="preview-subject ellipsis mb-1 fw-normal">Cregh send you a message</h6>
-                      <p class="text-gray mb-0"> 15 Minutes ago </p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img src="../../../assets/images/faces/face7.jpg" alt="image" class="profile-pic">
-                    </div>
-                    <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                      <h6 class="preview-subject ellipsis mb-1 fw-normal">Profile picture updated</h6>
-                      <p class="text-gray mb-0"> 18 Minutes ago </p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <h6 class="p-3 mb-0 text-center text-primary font-13">4 new messages</h6>
-                </div>
-              </li>
               <li class="nav-item dropdown ms-3">
                 <a class="nav-link" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
                   <i class="mdi mdi-bell-outline"></i>
@@ -264,12 +200,6 @@
               </li>
             </ul>
             <ul class="navbar-nav navbar-nav-right">
-              <li class="nav-item nav-logout d-none d-md-block me-3">
-                <a class="nav-link" href="#">Status</a>
-              </li>
-              <li class="nav-item nav-logout d-none d-md-block">
-                <button class="btn btn-sm btn-danger">Trailing</button>
-              </li>
               <li class="nav-item nav-profile dropdown d-none d-md-block">
                 <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
                   <div class="nav-profile-text">English </div>
