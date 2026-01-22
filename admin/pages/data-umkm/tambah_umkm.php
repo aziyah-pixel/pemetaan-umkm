@@ -270,12 +270,13 @@ $kodeUMKM = 'UM' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
                     <form id="formUMKM" 
                           class="forms-sample" 
                           enctype="multipart/form-data" 
-                          action="../../../config/config.php"
+                          action="../../../config/proses/umkm.php"
                           method="POST"
                           novalidate>
   
                     <div class="row">
                     <input type="hidden" name="aksi" value="tambah">
+                    <input type="hidden" name="operator" value="<?= $_SESSION['nama_penguna']; ?>">
                     <!-- kode UMKM -->
                     <div class="col-md-6">
                         <div class="form-group">

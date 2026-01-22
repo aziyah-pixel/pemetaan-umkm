@@ -26,23 +26,24 @@ if ($aksi == 'tambah') {
   $rt_umkm             = $_POST['rt_umkm'];
   $rw_umkm             = $_POST['rw_umkm'];
   $alamat_umkm         = $_POST['alamat_umkm'];
+  $operator         = $_POST['operator'];
  
   // UPLOAD FOTO
   $foto_umkm = $_FILES['foto_umkm'];
   $namaFoto = time() . "_" . $foto_umkm['name'];
-  $path = "../admin/asset/images/umkm/" . $namaFoto;
+  $path = "../../admin/asset/images/umkm/" . $namaFoto;
 
   move_uploaded_file($foto_umkm['tmp_name'], $path);
 
   // INSERT DATABASE
-  $sql = "INSERT INTO data_umkm
+  $sql = "INSERT INTO umkm
   (kode_umkm, nama_umkm, nama_pemilik, nik, no_hp, email,
   jenis_usaha, kategori_usaha, wilayah,
-  kelurahan, rt, rw, alamat, foto)
+  kelurahan, rt, rw, alamat, foto, operator)
   VALUES
   (:kode_umkm, :nama_umkm, :nama_pemilik_umkm, :nik_umkm, :no_hp_umkm, :email_umkm,
   :jenis_usaha, :kategori_usaha, :wilayah_umkm,
-  :kelurahan_umkm, :rt_umkm, :rw_umkm, :alamat_umkm, :foto_umkm)";
+  :kelurahan_umkm, :rt_umkm, :rw_umkm, :alamat_umkm, :foto_umkm, :operator)";
 
   $stmt = $conn->prepare($sql);
   $stmt->execute([
@@ -59,7 +60,8 @@ if ($aksi == 'tambah') {
     ':rt_umkm' => $rt_umkm,
     ':rw_umkm' => $rw_umkm,
     ':alamat_umkm' => $alamat_umkm,
-    ':foto_umkm' => $namaFoto
+    ':foto_umkm' => $namaFoto,
+    ':operator' => $operator
   ]);
 
   header("Location: ../../admin/pages/data-umkm/data_umkm.php");
