@@ -1,3 +1,6 @@
+<?php
+require '../config/auth_admin.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -50,7 +53,7 @@
               <img class="sidebar-brand-logo" src="../assets/images/logo.png" alt="">
               <!--<img class="sidebar-brand-logomini" src="../assets/images/logo-mini.png" alt="">-->
               <div class="nav-profile-text d-flex ms-0 mb-3 flex-column">
-                <span class="fw-semibold mb-1 mt-2 text-center">Antonio Olson</span>
+                <span class="fw-semibold mb-1 mt-2 text-center"><?= $_SESSION['nama_penguna']; ?></span>
               </div>
             </a>
           </li>
@@ -81,7 +84,7 @@
             </a>
             <div class="collapse" id="data-umkm">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="pages/data-umkm/tambah_umkm.html">Tambah Data</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/data-umkm/tambah_umkm.php">Tambah Data</a></li>
                 <li class="nav-item"> <a class="nav-link" href="pages/data-umkm/data_umkm.html">Data UMKM</a></li>
                 <li class="nav-item"> <a class="nav-link" href="pages/data-umkm/detail_umkm.html">Detail UMKM</a></li>
               </ul>

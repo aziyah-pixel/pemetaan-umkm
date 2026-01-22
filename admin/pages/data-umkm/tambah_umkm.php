@@ -1,8 +1,9 @@
 <?php
+require '../../../config/auth/auth_admin.php';
 require '../../../config/conn.php';
 
 // ambil kode UMKM terakhir
-$sql = "SELECT kode_umkm FROM data_umkm ORDER BY id_umkm DESC LIMIT 1";
+$sql = "SELECT kode_umkm FROM umkm ORDER BY id_umkm DESC LIMIT 1";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 
@@ -72,7 +73,7 @@ $kodeUMKM = 'UM' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
               <img class="sidebar-brand-logo" src="../../../assets/images/logo.png" alt="">
               <!--<img class="sidebar-brand-logomini" src="../assets/images/logo-mini.png" alt="">-->
               <div class="nav-profile-text d-flex ms-0 mb-3 flex-column">
-                <span class="fw-semibold mb-1 mt-2 text-center">Antonio Olson</span>
+                <span class="fw-semibold mb-1 mt-2 text-center"><?= $_SESSION['nama_penguna']; ?></span>
               </div>
             </a>
           </li>
@@ -274,7 +275,7 @@ $kodeUMKM = 'UM' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
                           novalidate>
   
                     <div class="row">
-  
+                    <input type="hidden" name="aksi" value="tambah">
                     <!-- kode UMKM -->
                     <div class="col-md-6">
                         <div class="form-group">

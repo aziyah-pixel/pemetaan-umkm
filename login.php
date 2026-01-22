@@ -4,7 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Plus Admin</title>
+    <title>SIPUMKM | Login</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="assets/vendors/ti-icons/css/themify-icons.css">
@@ -31,24 +31,19 @@
                   <img src="assets/images/logo.svg">
                 </div>
                 <h4 class="text-center">Sign in to continue.</h4>
-                <form class="pt-3">
+                <form class="pt-3" method="POST" action="config/auth/proses_auth.php">
+                <input type="hidden" name="aksi" value="login">
                   <div class="form-group">
-                    <input type="email" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Username">
+                    <input type="text" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Username" name="username" required> 
                   </div>
                   <div class="form-group">
-                    <input type="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password">
+                    <input type="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password" name="password" required>
                   </div>
                   <div class="mt-3 d-grid gap-2">
-                    <a class="btn btn-block btn-primary btn-lg fw-semibold auth-form-btn" href="admin/index.html">SIGN IN</a>
+                  <button type="submit" class="btn btn-block btn-primary btn-lg fw-semibold auth-form-btn"> SIGN IN</button>
                   </div>
-                  <div class="my-2 d-flex justify-content-between align-items-center">
-                    <div class="form-check">
-                      <label class="form-check-label text-muted">
-                        <input type="checkbox" class="form-check-input"> Keep me signed in </label>
-                    </div>
-                    <a href="#" class="auth-link text-black">Forgot password?</a>
-                  </div>
-                  <div class="text-center mt-4 fw-light"> Don't have an account? <a href="register.html" class="text-primary">Create</a>
+                  
+                  <div class="text-center mt-4 fw-light"> Don't have an account? <a href="register.php" class="text-primary">Create</a>
                   </div>
                 </form>
               </div>

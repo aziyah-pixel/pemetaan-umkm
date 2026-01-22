@@ -4,7 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Plus Admin</title>
+    <title>SIPUMKM | Register</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="assets/vendors/ti-icons/css/themify-icons.css">
@@ -31,29 +31,30 @@
                   <img src="assets/images/logo.svg">
                 </div>
                 <h6 class="fw-light">Signing up is easy. It only takes a few steps</h6>
-                <form class="pt-3">
+                <form class="pt-3" method="POST" action="config/auth/proses_auth.php">
+                <input type="hidden" name="aksi" value="register">
                   <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
-                        <input type="text" class="form-control form-control-lg" placeholder="Name">
+                        <input type="text" class="form-control form-control-lg" placeholder="Name" name="nama_penguna" required>
                       </div>
                     </div>
 
                     <div class="col-md-6">
                       <div class="form-group">
-                        <input type="text" class="form-control form-control-lg" placeholder="Username">
+                        <input type="text" class="form-control form-control-lg" placeholder="Username" name="username" required>
                       </div>
                     </div>
 
                     <div class="col-md-6">
                       <div class="form-group">
-                        <input type="text" class="form-control form-control-lg" placeholder="Alamat">
+                        <input type="text" class="form-control form-control-lg" placeholder="Alamat" name="alamat_penguna" required>
                       </div>
                     </div>
                 
                     <div class="col-md-6">
                       <div class="form-group">
-                        <input type="email" class="form-control form-control-lg" placeholder="Email">
+                        <input type="email" class="form-control form-control-lg" placeholder="Email@gmail.com" name="email_penguna" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" required>
                       </div>
                     </div>
                   </div>
@@ -61,36 +62,31 @@
                   <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
-                        <input type="password" class="form-control form-control-lg" placeholder="Password">
+                        <input type="password" class="form-control form-control-lg" placeholder="Password" name="password"required>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <select class="form-select form-select-lg">
-                          <option>Status</option>
-                          <option>Operator</option>
-                          <option>Admin</option>
-                        </select>
+                      <select name="role" class="form-select form-select-lg" required>
+                        <option value="">Pilih Status</option>
+                        <option value="operator">Operator</option>
+                        <option value="admin">Admin</option>
+                      </select>
                       </div>
                     </div>
                   </div>
-                
                   <div class="mb-4">
                     <div class="form-check">
                       <label class="form-check-label text-muted">
-                        <input type="checkbox" class="form-check-input">
-                        I agree to all Terms & Conditions
-                      </label>
+                        <input type="checkbox" class="form-check-input" required> I agree to all Terms & Conditions </label>
                     </div>
-                  </div>
-                
                   <div class="mt-3 d-grid gap-2">
-                    <a class="btn btn-primary btn-lg fw-semibold auth-form-btn" href="#">SIGN UP</a>
+                  <button type="submit" class="btn btn-primary btn-lg fw-semibold">SIGN UP</button>
                   </div>
                 
                   <div class="text-center mt-4 fw-light">
                     Already have an account?
-                    <a href="login.html" class="text-primary">Login</a>
+                    <a href="login.php" class="text-primary">Login</a>
                   </div>
                 </form>
                 
@@ -115,5 +111,22 @@
     <script src="assets/js/todolist.js"></script>
     <script src="assets/js/hoverable-collapse.js"></script>
     <!-- endinject -->
+    <script>
+      (() => {
+        'use strict'
+        const forms = document.querySelectorAll('form')
+
+        Array.from(forms).forEach(form => {
+          form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+              event.preventDefault()
+              event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+          }, false)
+        })
+      })()
+    </script>
+
   </body>
 </html>
