@@ -1,5 +1,5 @@
 <?php
-require '../config/auth_admin.php';
+require '../config/auth/auth_admin.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,7 +71,7 @@ require '../config/auth_admin.php';
             <span class="nav-item-head">Menu Utama</span>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="index.html">
+            <a class="nav-link" href="index.php">
               <i class="mdi mdi-compass-outline menu-icon"></i>
               <span class="menu-title">Beranda</span>
             </a>

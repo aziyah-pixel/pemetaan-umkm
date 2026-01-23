@@ -1,3 +1,13 @@
+<?php
+require '../../../config/auth/auth_admin.php';
+require '../../../config/conn.php';
+
+$sql = "SELECT * FROM umkm ORDER BY id_umkm DESC";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -50,7 +60,7 @@
               <img class="sidebar-brand-logo" src="../../../assets/images/logo.png" alt="">
               <!--<img class="sidebar-brand-logomini" src="../assets/images/logo-mini.png" alt="">-->
               <div class="nav-profile-text d-flex ms-0 mb-3 flex-column">
-                <span class="fw-semibold mb-1 mt-2 text-center">Antonio Olson</span>
+                <span class="fw-semibold mb-1 mt-2 text-center"><?= $_SESSION['nama_penguna']; ?></span>
               </div>
             </a>
           </li>
@@ -68,7 +78,7 @@
             <span class="nav-item-head">Menu Utama</span>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="../../index.html">
+            <a class="nav-link" href="../../index.php">
               <i class="mdi mdi-compass-outline menu-icon"></i>
               <span class="menu-title">Beranda</span>
             </a>
@@ -81,9 +91,9 @@
             </a>
             <div class="collapse" id="data-umkm">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../data-umkm/tambah_umkm.html">Tambah Data</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../data-umkm/data_umkm.html">Data UMKM</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../data-umkm/detail_umkm.html">Detail UMKM</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../data-umkm/tambah_umkm.php">Tambah Data</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../data-umkm/data_umkm.php">Data UMKM</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../data-umkm/detail_umkm.php">Detail UMKM</a></li>
               </ul>
             </div>
           </li>
@@ -266,68 +276,48 @@
                       <th>Pemilik</th>
                       <th>Jenis Usaha</th>
                       <th>Wilayah</th>
-                      <th>Status</th>
                       <th class="text-center">Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>
-                        <img src="../../../assets/images/umkm/umkm1.jpg"
-                            class="img-thumbnail"
-                            style="width: 60px;">
-                      </td>
-                      <td>UMKM Sukses Jaya</td>
-                      <td>Budi Santoso</td>
-                      <td>Kuliner</td>
-                      <td>Kel. Sukamaju</td>
-                      <td>
-                        <span class="badge bg-warning text-dark">
-                          Belum Verifikasi
-                        </span>
-                      </td>
-                      <td class="text-center">
-                        <a href="detail_umkm.html" class="btn btn-sm btn-info">
-                          <i class="mdi mdi-eye"></i>
-                        </a>
-                        <a href="edit_umkm.html" class="btn btn-sm btn-warning">
-                          <i class="mdi mdi-pencil"></i>
-                        </a>
-                        <button class="btn btn-sm btn-danger">
-                          <i class="mdi mdi-delete"></i>
-                        </button>
-                      </td>
-                    </tr>
+                  <?php if (count($dataUmkm) > 0): ?>
+                        <?php $no = 1; foreach ($dataUmkm as $umkm): ?>
+                          <tr>
+                            <td><?= $no++; ?></td>
 
-                    <tr>
-                      <td>2</td>
-                      <td>
-                        <img src="../../../assets/images/umkm/umkm2.jpg"
-                            class="img-thumbnail"
-                            style="width: 60px;">
-                      </td>
-                      <td>UMKM Maju Bersama</td>
-                      <td>Siti Aminah</td>
-                      <td>Fashion</td>
-                      <td>Kel. Mekarjaya</td>
-                      <td>
-                        <span class="badge bg-success">
-                          Terverifikasi
-                        </span>
-                      </td>
-                      <td class="text-center">
-                        <a href="detail_umkm.html" class="btn btn-sm btn-info">
-                          <i class="mdi mdi-eye"></i>
-                        </a>
-                        <a href="edit_umkm.html" class="btn btn-sm btn-warning">
-                          <i class="mdi mdi-pencil"></i>
-                        </a>
-                        <button class="btn btn-sm btn-danger">
-                          <i class="mdi mdi-delete"></i>
-                        </button>
-                      </td>
-                    </tr>
+                            <td>
+                              <img src="../../asset/images/umkm/<?= $umkm['foto']; ?>"
+                                  class="img-thumbnail"
+                                  style="width:60px">
+                            </td>
+
+                            <td><?= htmlspecialchars($umkm['nama_umkm']); ?></td>
+                            <td><?= htmlspecialchars($umkm['nama_pemilik']); ?></td>
+                            <td><?= htmlspecialchars($umkm['jenis_usaha']); ?></td>
+                            <td><?= htmlspecialchars($umkm['wilayah']); ?></td>
+
+                          
+
+                            <td class="text-center">
+                              <a href="detail_umkm.php?id=<?= $umkm['id_umkm']; ?>" class="btn btn-sm btn-info">
+                                <i class="mdi mdi-eye"></i>
+                              </a>
+                              <a href="edit_umkm.php?id=<?= $umkm['id_umkm']; ?>" class="btn btn-sm btn-warning">
+                                <i class="mdi mdi-pencil"></i>
+                              </a>
+                              <a href="../../../config/proses/umkm.php?aksi=hapus&id=<?= $umkm['id_umkm']; ?>"
+                                class="btn btn-sm btn-danger"
+                                onclick="return confirm('Yakin ingin menghapus data ini?')">
+                                <i class="mdi mdi-delete"></i>
+                              </a>
+                            </td>
+                          </tr>
+                        <?php endforeach; ?>
+                      <?php else: ?>
+                        <tr>
+                          <td colspan="8" class="text-center">Data UMKM belum tersedia</td>
+                        </tr>
+                      <?php endif; ?>
 
                   </tbody>
                 </table>

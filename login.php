@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -33,6 +37,16 @@
                 <h4 class="text-center">Sign in to continue.</h4>
                 <form class="pt-3" method="POST" action="config/auth/proses_auth.php">
                 <input type="hidden" name="aksi" value="login">
+                <div class="form-group">
+                  <?php
+                  if (isset($_SESSION['error'])) {
+                    echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            ' . $_SESSION['error'] . '
+                          </div>';
+                    unset($_SESSION['error']); // hapus setelah tampil
+                }
+                ?>
+                </div>
                   <div class="form-group">
                     <input type="text" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Username" name="username" required> 
                   </div>

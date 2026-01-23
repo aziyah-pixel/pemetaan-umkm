@@ -91,7 +91,7 @@ $kodeUMKM = 'UM' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
             <span class="nav-item-head">Menu Utama</span>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="../../index.html">
+            <a class="nav-link" href="../../index.php>
               <i class="mdi mdi-compass-outline menu-icon"></i>
               <span class="menu-title">Beranda</span>
             </a>
@@ -104,9 +104,9 @@ $kodeUMKM = 'UM' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
             </a>
             <div class="collapse" id="data-umkm">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../data-umkm/tambah_umkm.html">Tambah Data</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../data-umkm/data_umkm.html">Data UMKM</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../data-umkm/detail_umkm.html">Detail UMKM</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../data-umkm/tambah_umkm.php">Tambah Data</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../data-umkm/data_umkm.php">Data UMKM</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../data-umkm/detail_umkm.php">Detail UMKM</a></li>
               </ul>
             </div>
           </li>

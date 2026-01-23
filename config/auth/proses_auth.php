@@ -38,13 +38,18 @@ if ($user) {
         exit;
 
     } else {
-        header("Location: login.php?error=password");
-        exit;
+       // PASSWORD SALAH
+       $_SESSION['error'] = "Password yang Anda masukkan salah!";
+       header("Location: ../../login.php");
+       exit;
     }
 
 } else {
-    header("Location: login.php?error=username");
+    // USERNAME TIDAK ADA
+    $_SESSION['error'] = "Username tidak ditemukan!";
+    header("Location: ../../login.php");
     exit;
+
 }
 }
 
