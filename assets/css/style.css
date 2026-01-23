@@ -25477,3 +25477,16 @@ select.form-select.border-dark:focus {
   flex-grow: 1;
 }
 /*# sourceMappingURL=maps/style.css.map */
+
+.img-umkm {
+  width: 100%;
+  height: 220px;
+  object-fit: cover; /* POTONG TANPA MERUSAK RATIO */
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.table-detail th {
+  width: 180px;
+  color: #555;
+}

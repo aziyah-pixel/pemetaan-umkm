@@ -2,12 +2,27 @@
 require '../../../config/auth/auth_admin.php';
 require '../../../config/conn.php';
 
-$sql = "SELECT * FROM umkm ORDER BY id_umkm DESC";
-$stmt = $conn->prepare($sql);
-$stmt->execute();
-$dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// CEK ID UMKM
+if (!isset($_GET['id_umkm']) || empty($_GET['id_umkm'])) {
+    header("Location: data_umkm.php?pilih=true");
+    exit;
+}
 
+$id_umkm = $_GET['id_umkm'];
+
+// AMBIL DATA UMKM
+$sql = "SELECT * FROM umkm WHERE id_umkm = ?";
+$stmt = $conn->prepare($sql);
+$stmt->execute([$id_umkm]);
+$umkm = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// JIKA DATA TIDAK DITEMUKAN
+if (!$umkm) {
+    header("Location: data_umkm.php?notfound=true");
+    exit;
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -34,24 +49,6 @@ $dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </head>
   <body>
     <div class="container-scroller">
-      <div class="row p-0 m-0 proBanner" id="proBanner">
-        <div class="col-md-12 p-0 m-0">
-          <div class="card-body card-body-padding px-3 d-flex align-items-center justify-content-between">
-            <div class="ps-lg-3">
-              <div class="d-flex align-items-center justify-content-between">
-                <p class="mb-0 fw-medium me-3 buy-now-text">Free 24/7 customer support, updates, and more with this template!</p>
-                <a href="https://www.bootstrapdash.com/product/plus-admin-template/" target="_blank" class="btn me-2 buy-now-btn border-0">Buy Now</a>
-              </div>
-            </div>
-            <div class="d-flex align-items-center justify-content-between">
-              <a href="https://www.bootstrapdash.com/product/plus-admin-template/"><i class="mdi mdi-home me-3 text-white"></i></a>
-              <button id="bannerClose" class="btn border-0 p-0">
-                <i class="mdi mdi-close text-white"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
       <!-- partial:partials/_sidebar.html -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
@@ -93,7 +90,7 @@ $dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="../data-umkm/tambah_umkm.php">Tambah Data</a></li>
                 <li class="nav-item"> <a class="nav-link" href="../data-umkm/data_umkm.php">Data UMKM</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../data-umkm/data_umkm.php?pilih=true">Detail UMKM</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../data-umkm/detail_umkm.php">Detail UMKM</a></li>
               </ul>
             </div>
           </li>
@@ -244,109 +241,102 @@ $dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <div class="content-wrapper pb-0">
 
              <!-- PAGE HEADER -->
-              <div class="page-header d-flex justify-content-between align-items-center">
+            <div class="page-header d-flex justify-content-between align-items-center">
                 <h3 class="page-title">
-                  <i class="mdi mdi-store text-primary"></i>
-                  Daftar UMKM
+                <i class="mdi mdi-file-document-outline text-primary"></i>
+                  Detail UMKM
                 </h3>
-                <a href="tambah_umkm.php" class="btn btn-success mt-2 mt-sm-0 btn-icon-text text-center">
-                  <i class="mdi mdi-plus-circle"></i> Tambah
+                <a href="data_umkm.php" class="btn btn-danger mt-2 mt-sm-0 btn-icon-text text-center">
+                    <i class="mdi mdi-arrow-left"></i> Kembali
                 </a>
-              </div>
-
-        <!-- CARD -->
-          <div class="card">
-            <div class="card-body">
-
-              <!-- SEARCH -->
-              <div class="row mb-3">
-                <div class="col-md-4">
-                  <input type="text" class="form-control" placeholder="Cari Nama UMKM / Pemilik">
-                </div>
-              </div>
-
-              <!-- TABLE -->
-              <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                  <thead class="table-light">
-                    <tr>
-                      <th>No</th>
-                      <th>Foto</th>
-                      <th>Nama UMKM</th>
-                      <th>Pemilik</th>
-                      <th>Jenis Usaha</th>
-                      <th>Kategori Usaha</th>
-                      <th>Wilayah</th>
-                      <th class="text-center">Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  <?php if (count($dataUmkm) > 0): ?>
-                        <?php $no = 1; foreach ($dataUmkm as $umkm): ?>
-                          <tr>
-                            <td><?= $no++; ?></td>
-
-                            <td>
-                              <img src="../../asset/images/umkm/<?= $umkm['foto']; ?>"
-                                  class="img-thumbnail"
-                                  style="width:60px">
-                            </td>
-
-                            <td><?= htmlspecialchars($umkm['nama_umkm']); ?></td>
-                            <td><?= htmlspecialchars($umkm['nama_pemilik']); ?></td>
-                            <td><?= htmlspecialchars($umkm['jenis_usaha']); ?></td>
-                            <td><?= htmlspecialchars($umkm['kategori_usaha']); ?></td>
-                            <td><?= htmlspecialchars($umkm['wilayah']); ?></td>
-
-
-                          
-
-                            <td class="text-center">
-                              <a href="detail_umkm.php?id_umkm=<?= $umkm['id_umkm']; ?>" class="btn btn-sm btn-info">
-                                <i class="mdi mdi-eye"></i>
-                              </a>
-                              <a href="edit_umkm.php?id_umkm=<?= $umkm['id_umkm']; ?>" class="btn btn-sm btn-warning">
-                                <i class="mdi mdi-pencil"></i>
-                              </a>
-                              <a href="../../../config/proses/umkm.php?aksi=hapus&id_umkm=<?= $umkm['id_umkm']; ?>"
-                                class="btn btn-sm btn-danger"
-                                onclick="return confirm('Yakin ingin menghapus data ini?')">
-                                <i class="mdi mdi-delete"></i>
-                              </a>
-                            </td>
-                          </tr>
-                        <?php endforeach; ?>
-                      <?php else: ?>
-                        <tr>
-                          <td colspan="8" class="text-center">Data UMKM belum tersedia</td>
-                        </tr>
-                      <?php endif; ?>
-
-                  </tbody>
-                </table>
-              </div>
-
-              <!-- PAGINATION -->
-              <nav class="mt-3">
-                <ul class="pagination justify-content-end">
-                  <li class="page-item disabled">
-                    <a class="page-link">Previous</a>
-                  </li>
-                  <li class="page-item active">
-                    <a class="page-link">1</a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link">2</a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link">Next</a>
-                  </li>
-                </ul>
-              </nav>
-
             </div>
-          </div>
-  
+
+           <!-- CARD DETAIL -->
+            <div class="card">
+                <div class="card-body">
+
+                <div class="row">
+
+                    <!-- FOTO UMKM -->
+                    <div class="col-md-4 text-center">
+                    <?php
+                    $foto = $umkm['foto'] ? $umkm['foto'] : 'default.jpg';
+                    ?>
+                    <img
+                        src="../../asset/images/umkm/<?= $foto ?>"
+                        class="img-fluid img-umkm mb-3"
+                        alt="Foto UMKM">
+                    </div>
+
+                    <!-- DATA UMKM -->
+                    <div class="col-md-8">
+                    <h3 class="fw-bold mb-0"><?= htmlspecialchars($umkm['nama_umkm']); ?></h3>
+                    <table class="table table-borderless table-detail">
+                        <tr>
+                        <td>Nama Pemilik</td>
+                        <td>: <?= htmlspecialchars($umkm['nama_pemilik']); ?></td>
+                        </tr>
+                        <tr>
+                        <td>NIK</td>
+                        <td>: <?= htmlspecialchars($umkm['nik']); ?></td>
+                        </tr>
+                        <tr>
+                        <td>No HP</td>
+                        <td>: <?= htmlspecialchars($umkm['no_hp']); ?></td>
+                        </tr>
+                        <tr>
+                        <td>Email</td>
+                        <td>: <?= htmlspecialchars($umkm['email']); ?></td>
+                        </tr>
+                        <tr>
+                        <td>Jenis Usaha</td>
+                        <td>: <?= htmlspecialchars($umkm['jenis_usaha']); ?></td>
+                        </tr>
+                        <tr>
+                        <td>Kategori</td>
+                        <td>: <?= htmlspecialchars($umkm['kategori_usaha']); ?></td>
+                        </tr>
+                        <tr>
+                        <td>Wilayah</td>
+                        <td>: <?= htmlspecialchars($umkm['wilayah']); ?></td>
+                        </tr>
+                        <tr>
+                        <td>Kelurahan</td>
+                        <td>: <?= htmlspecialchars($umkm['kelurahan']); ?></td>
+                        </tr>
+                    </table>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <!-- ALAMAT -->
+                <div class="row">
+                    <div class="col-md-12">
+                    <h5 class="mb-2">
+                        <i class="mdi mdi-map-marker"></i> Alamat UMKM
+                    </h5>
+                    <p class="text-muted">
+                    <?= nl2br(htmlspecialchars($umkm['alamat'])); ?>                    </p>
+                    </div>
+                </div>
+
+                <!-- BUTTON AKSI -->
+                <div class="text-end mt-4">
+                    <a href="edit_umkm.php?id=1" class="btn btn-warning t-2 mt-sm-0 btn-icon-text text-center">
+                    <i class="mdi mdi-pencil"></i> Edit
+                    </a>
+                    <a href="export_detail_umkm_pdf.php?id_umkm=<?= $umkm['id_umkm']; ?>" 
+                    class="btn btn-primary t-2 mt-sm-0 btn-icon-text text-center">
+                    <i class="mdi mdi-file-document-outline "></i> Export PDF
+                    </a>
+                </div>
+
+                </div>
+            </div>
+
+
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
@@ -388,17 +378,5 @@ $dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="../../../assets/js/dashboard.js"></script>
     <!-- End custom js for this page -->
     <script src="../../asset/js/script.js"></script>
-    <?php if (isset($_GET['pilih'])): ?>
-    <script>
-      alert('Silakan pilih data UMKM terlebih dahulu, kemudian pilih tombol detail');
-    </script>
-    <?php endif; ?>
-
-    <?php if (isset($_GET['notfound'])): ?>
-    <script>
-      alert('Data UMKM tidak ditemukan');
-    </script>
-    <?php endif; ?>
-
   </body>
 </html>
