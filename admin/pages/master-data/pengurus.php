@@ -2,12 +2,29 @@
 require '../../../config/auth/auth_admin.php';
 require '../../../config/conn.php';
 
-$sql = "SELECT * FROM wilayah ORDER BY id_wilayah DESC";
+// ambil kode terakhir
+$sql = "SELECT kode_daerah FROM pengurus ORDER BY id_pengurus DESC LIMIT 1";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
-$wilayah = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$lastKode = $stmt->fetchColumn();
+
+if ($lastKode) {
+    // ambil angka dari UM001 → 001
+    $lastNumber = (int) substr($lastKode, 2);
+    $newNumber = $lastNumber + 1;
+} else {
+    $newNumber = 1;
+}
+
+// format jadi UM001
+$kodeDaerah = 'KD' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
 
 
+$sql = "SELECT * FROM pengurus ORDER BY id_pengurus DESC";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$dataPengurus = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <!DOCTYPE html>
@@ -16,7 +33,7 @@ $wilayah = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Plus Admin</title>
+    <title></title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../../../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../../../assets/vendors/ti-icons/css/themify-icons.css">
@@ -232,33 +249,37 @@ $wilayah = $stmt->fetchAll(PDO::FETCH_ASSOC);
              <!-- PAGE HEADER -->
               <div class="page-header d-flex justify-content-between align-items-center">
                 <h3 class="page-title">
-                <i class="mdi mdi-map-marker-radius text-primary"></i>
-                  Data Wilayah
+                <i class="mdi mdi-account-cog text-primary"></i>
+                  Data Pengurus
                 </h3>
                 <button  class="btn btn-success mt-2 mt-sm-0 btn-icon-text text-center" data-bs-toggle="modal"
-          data-bs-target="#modalTambahWilayah">
+          data-bs-target="#modalTambahpengurus">
                   <i class="mdi mdi-plus-circle"></i> Tambah
                 </button >
               </div>
               <?php if (isset($_GET['msg'])): ?>
 
-                <?php if ($_GET['msg'] == 'added'): ?>
-                  <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="mdi mdi-check-circle"></i> Data UMKM berhasil ditambahkan
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                  </div>
+              <?php if ($_GET['msg'] == 'added'): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                  <i class="mdi mdi-check-circle"></i> Data Pengurus berhasil ditambahkan
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
 
-              
+              <?php elseif ($_GET['msg'] == 'updated'): ?>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  <i class="mdi mdi-check-circle"></i> Data Pengurus berhasil diupdate
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
 
-                <?php elseif ($_GET['msg'] == 'deleted'): ?>
-                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="mdi mdi-delete"></i> Data UMKM berhasil dihapus
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                  </div>
-                <?php endif; ?>
+              <?php elseif ($_GET['msg'] == 'deleted'): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <i class="mdi mdi-delete"></i> Data Pengurus berhasil dihapus
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
 
-                <?php endif; ?>
+              <?php endif; ?>
 
+              <?php endif; ?>
 
         <!-- CARD -->
           <div class="card">
@@ -267,7 +288,7 @@ $wilayah = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <!-- SEARCH -->
               <div class="row mb-3">
                 <div class="col-md-4">
-                  <input type="text" class="form-control" placeholder="Cari Nama UMKM / Pemilik">
+                  <input type="text" class="form-control" placeholder="Cari DaPen">
                 </div>
               </div>
 
@@ -277,7 +298,6 @@ $wilayah = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <thead class="table-light">
                     <tr>
                       <th>No</th>
-                      <th>Wilayah</th>
                       <th>DaPen</th>
                       <th>Pengurus</th>
 
@@ -285,31 +305,37 @@ $wilayah = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </tr>
                   </thead>
                   <tbody>
-                  <?php if (count($wilayah) > 0): ?>
-                        <?php $no = 1; foreach ($datawilayah as $wilayah): ?>
+                  <?php if (count($dataPengurus) > 0): ?>
+                        <?php $no = 1; foreach ($dataPengurus as $dataPengurus): ?>
                           <tr>
                             <td><?= $no++; ?></td>
 
-                            <td><?= htmlspecialchars($wilayah['wilayah']); ?></td>
-                            <td><?= htmlspecialchars($wilayah['dapen']); ?></td>
-                            <td><?= htmlspecialchars($wilayah['pengurus']); ?></td>
+                            <td><?= htmlspecialchars($dataPengurus['kode_daerah']); ?></td>
+                            <td><?= htmlspecialchars($dataPengurus['pengurus']); ?></td>
                           
 
                             <td class="text-center">
-                              <a href="edit_umkm.php?id_wilayah=<?= $wilayah['id_wilayah']; ?>" class="btn btn-sm btn-warning">
+                            <a href="#"
+                                class="btn btn-sm btn-warning btnEditPengurus"
+                                data-id="<?= $dataPengurus['id_pengurus']; ?>"
+                                data-pengurus="<?= htmlspecialchars($dataPengurus['pengurus']); ?>"
+                                data-kode="<?= $dataPengurus['kode_daerah']; ?>">
                                 <i class="mdi mdi-pencil"></i>
-                              </a>
-                              <a href="../../../config/proses/umkm.php?aksi=hapus&id_wilayah=<?= $wilayah['id_wilayah']; ?>"
-                                class="btn btn-sm btn-danger"
-                                onclick="return confirm('Yakin ingin menghapus data ini?')">
-                                <i class="mdi mdi-delete"></i>
-                              </a>
+                            </a>
+
+                            <a href="#"
+                              class="btn btn-sm btn-danger btnHapusPengurus"
+                              data-id="<?= $dataPengurus['id_pengurus']; ?>"
+                              data-nama="<?= htmlspecialchars($dataPengurus['pengurus']); ?>">
+                              <i class="mdi mdi-delete"></i>
+                            </a>
+
                             </td>
                           </tr>
                         <?php endforeach; ?>
                       <?php else: ?>
                         <tr>
-                          <td colspan="8" class="text-center">Data UMKM belum tersedia</td>
+                          <td colspan="8" class="text-center">Data Pengurus belum tersedia</td>
                         </tr>
                       <?php endif; ?>
 
@@ -337,9 +363,180 @@ $wilayah = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             </div>
           </div>
-  
+
           </div>
-          <!-- content-wrapper ends -->
+
+        <!-- MODAL TAMBAH pengurus -->
+        <div class="modal fade" id="modalTambahpengurus" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                <i class="mdi mdi-account-plus text-primary"></i>
+                Tambah Pengurus
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form action="../../../config/proses/pengurus.php" method="POST">
+                <div class="modal-body">
+
+                <input type="hidden" name="aksi" value="tambah">
+
+                <div class="form-group mb-3">
+                    <label>Kode Pengurus</label>
+                    <input type="text"
+                        name="Kode_dapen"
+                        class="form-control"
+                        value ="<?= $kodeDaerah?>"
+                        readonly>
+                </div>
+                <div class="form-group mb-3">
+                    <label> Pengurus</label>
+                    <input type="text"
+                        name="pengurus"
+                        class="form-control"
+                        require>
+                </div>
+
+                </div>
+
+                <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-danger"
+                        data-bs-dismiss="modal">
+                        <i class="mdi mdi-close-circle-outline"></i>
+                    Batal
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="mdi mdi-content-save"></i>
+                    Simpan
+                </button>
+                </div>
+            </form>
+
+            </div>
+        </div>
+        </div>
+
+
+            <!-- MODAL ERROR PENGURUS -->
+            <div class="modal fade" id="modalErrorPengurus" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content border-danger">
+
+                  <div class="modal-header bg-danger text-white">
+                      <h5 class="modal-title">
+                      <i class="mdi mdi-alert-circle-outline"></i>
+                      Peringatan
+                      </h5>
+                      <button type="button" class="btn-close btn-close-white"
+                              data-bs-dismiss="modal"></button>
+                  </div>
+
+                  <div class="modal-body">
+                      <p class="mb-0">
+                      ❌ <strong>Nama pengurus wajib diisi.</strong><br>
+                      Silakan lengkapi data sebelum menyimpan.
+                      </p>
+                  </div>
+
+                  <div class="modal-footer">
+                      <button type="button"
+                              class="btn btn-danger"
+                              data-bs-dismiss="modal">
+                      Mengerti
+                      </button>
+                  </div>
+
+                  </div>
+              </div>
+            </div>
+
+            <!-- Modal edit -->
+            <div class="modal fade" id="modalEditPengurus" tabindex="-1">
+                <div class="modal-dialog">
+                    <form action="../../../config/proses/pengurus.php" method="POST" class="modal-content">
+
+                    <input type="hidden" name="aksi" value="edit">
+                    <input type="hidden" name="id_pengurus" id="edit_id_pengurus">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">✏️ Edit Pengurus</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                        <label class="form-label">Kode Daerah</label>
+                        <input type="text" name="kodedapen" id="edit_kode_daerah"
+                                class="form-control" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                        <label class="form-label">Pengurus</label>
+                        <input type="text" name="pengurus" id="edit_pengurus"
+                                class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                        <i class="mdi mdi-close-circle-outline"></i>
+                        Batal
+                        </button>
+                        <button type="submit" class="btn btn-warning">
+                        <i class="mdi mdi-content-save"></i>
+                        Simpan 
+                        </button>
+                    </div>
+
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal Hapus -->
+            <div class="modal fade" id="modalHapusPengurus" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <form action="../../../config/proses/pengurus.php" method="POST" class="modal-content">
+
+                  <input type="hidden" name="aksi" value="hapus">
+                  <input type="hidden" name="id_pengurus" id="hapus_id_pengurus">
+
+                  <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                      <i class="mdi mdi-alert-circle-outline"></i> Konfirmasi Hapus
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white"
+                            data-bs-dismiss="modal"></button>
+                  </div>
+
+                  <div class="modal-body">
+                    <p>
+                      Apakah Anda yakin ingin menghapus pengurus:
+                    </p>
+                    <p class="fw-bold text-danger" id="hapus_nama_pengurus"></p>
+                    <p class="mb-0">Data yang dihapus <strong>tidak dapat dikembalikan</strong>.</p>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                            <i class="mdi mdi-close-circle-outline"></i>
+                      Batal
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                      <i class="mdi mdi-delete"></i> Hapus
+                    </button>
+                  </div>
+
+                </form>
+              </div>
+            </div>
+
+
+            <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
           <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
@@ -378,53 +575,7 @@ $wilayah = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="../../../assets/js/proBanner.js"></script>
     <script src="../../../assets/js/dashboard.js"></script>
     <!-- End custom js for this page -->
-    <script src="../../asset/js/script.js"></script>
-
-    <!-- MODAL TAMBAH WILAYAH -->
-<div class="modal fade" id="modalTambahWilayah" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title">
-          <i class="mdi mdi-map-plus text-primary"></i>
-          Tambah Wilayah
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <form action="../../../config/proses/wilayah.php" method="POST">
-        <div class="modal-body">
-
-          <input type="hidden" name="aksi" value="tambah">
-
-          <div class="form-group mb-3">
-            <label>Nama Wilayah</label>
-            <input type="text"
-                   name="nama_wilayah"
-                   class="form-control"
-                   placeholder="Contoh: Kecamatan Laweyan"
-                   required>
-          </div>
-
-        </div>
-
-        <div class="modal-footer">
-          <button type="button"
-                  class="btn btn-light"
-                  data-bs-dismiss="modal">
-            Batal
-          </button>
-          <button type="submit" class="btn btn-primary">
-            <i class="mdi mdi-content-save"></i>
-            Simpan
-          </button>
-        </div>
-      </form>
-
-    </div>
-  </div>
-</div>
-
+    <script src="../../asset/js/pengurus.js"></script>
+   
   </body>
 </html>

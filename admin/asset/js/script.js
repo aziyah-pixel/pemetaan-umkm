@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
     showToastError(message);
   }
 
+
 });
 
 /* =========================
@@ -81,3 +82,4 @@ function showToastError(message) {
     new bootstrap.Toast(toast, { delay: 6000 }).show();
   }
 }
+
