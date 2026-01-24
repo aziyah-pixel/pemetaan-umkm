@@ -92,8 +92,8 @@ require '../config/auth/auth_admin.php';
             </a>
             <div class="collapse" id="master-data">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="pages/master-data/jenis-data.html">Jenis Data</a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/master-data/wilayah.html">Wilayah</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/master-data/jenis-data.php">Jenis Data</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/master-data/wilayah.php">Wilayah</a></li>
               </ul>
             </div>
           </li>

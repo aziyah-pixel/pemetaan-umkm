@@ -2,23 +2,20 @@
 require '../../../config/auth/auth_admin.php';
 require '../../../config/conn.php';
 
-// CEK ID UMKM
-if (!isset($_GET['id_umkm']) || empty($_GET['id_umkm'])) {
-    header("Location: data_umkm.php?pilih=true");
+if (!isset($_GET['id_umkm'])) {
+    header("Location: data_umkm.php");
     exit;
 }
 
 $id_umkm = $_GET['id_umkm'];
 
-// AMBIL DATA UMKM
-$sql = "SELECT * FROM umkm WHERE id_umkm = ?";
+$sql = "SELECT * FROM umkm WHERE id_umkm = :id";
 $stmt = $conn->prepare($sql);
-$stmt->execute([$id_umkm]);
+$stmt->execute(['id' => $id_umkm]);
 $umkm = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// JIKA DATA TIDAK DITEMUKAN
 if (!$umkm) {
-    header("Location: data_umkm.php?notfound=true");
+    header("Location: data_umkm.php");
     exit;
 }
 ?>
@@ -75,12 +72,12 @@ if (!$umkm) {
             <span class="nav-item-head">Menu Utama</span>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="../../index.php">
+            <a class="nav-link" href="../../index.php>
               <i class="mdi mdi-compass-outline menu-icon"></i>
               <span class="menu-title">Beranda</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" data-bs-toggle="collapse" href="#data-umkm" aria-expanded="false" aria-controls="ui-basic">
               <i class="mdi mdi-store menu-icon"></i>
               <span class="menu-title">Data UMKM</span>
@@ -239,110 +236,115 @@ if (!$umkm) {
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper pb-0">
-
-             <!-- PAGE HEADER -->
             <div class="page-header d-flex justify-content-between align-items-center">
-                <h3 class="page-title">
-                <i class="mdi mdi-file-document-outline text-primary"></i>
-                  Detail UMKM
+                <h3 class="page-title mb-0">
+                    <i class="mdi mdi-store-edit text-primary"></i>
+                    Edit Data UMKM
                 </h3>
-                <a href="data_umkm.php" class="btn btn-danger mt-2 mt-sm-0 btn-icon-text text-center">
+
+                <a href="data_umkm.php" class="btn btn-danger btn-sm mt-2 mt-sm-0 btn-icon-text text-center">
                     <i class="mdi mdi-arrow-left"></i> Kembali
                 </a>
             </div>
-            <?php if (isset($_GET['msg']) && $_GET['msg'] === 'update') : ?>
-                  <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <i class="mdi mdi-pencil"></i> Data UMKM berhasil diperbarui
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                  </div>
-            <?php endif; ?>
-
-           <!-- CARD DETAIL -->
-            <div class="card">
+              <!-- FORM -->
+            <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
                 <div class="card-body">
+  
+                <form action="../../../config/proses/umkm.php" method="POST" enctype="multipart/form-data">
+  
+                    <input type="hidden" name="aksi" value="edit">
+                    <input type="hidden" name="id_umkm" value="<?= $umkm['id_umkm']; ?>">
 
-                <div class="row">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Kode UMKM</label>
+                            <input type="text" name="nama_umkm" class="form-control"
+                                value="<?= $umkm['kode_umkm']; ?>" required readonly>
+                        </div>
 
-                    <!-- FOTO UMKM -->
-                    <div class="col-md-4 text-center">
-                    <?php
-                    $foto = $umkm['foto'] ? $umkm['foto'] : 'default.jpg';
-                    ?>
-                    <img
-                        src="../../asset/images/umkm/<?= $foto ?>"
-                        class="img-fluid img-umkm mb-3"
-                        alt="Foto UMKM">
+                        <div class="col-md-6 mb-3">
+                            <label>Nama UMKM</label>
+                            <input type="text" name="nama_umkm" class="form-control"
+                                value="<?= $umkm['nama_umkm']; ?>" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>NIK Pemilik</label>
+                            <input type="text" name="pemilik" class="form-control"
+                                value="<?= $umkm['nama_pemilik']; ?>" required>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label>Kontak</label>
+                            <input type="text" name="no_hp" class="form-control"
+                                value="<?= $umkm['no_hp']; ?>" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Email</label>
+                            <input type="text" name="email" class="form-control"
+                                value="<?= $umkm['email']; ?>" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Jenis Usaha</label>
+                            <input type="text" name="jenis_usaha" class="form-control"
+                                value="<?= $umkm['jenis_usaha']; ?>" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Kategori Usaha</label>
+                            <input type="text" name="kategori" class="form-control"
+                                value="<?= $umkm['kategori_usaha']; ?>" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Wilayah</label>
+                            <input type="text" name="wilayah" class="form-control"
+                                value="<?= $umkm['wilayah']; ?>" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Alamat</label>
+                            <input type="text" name="alamat" class="form-control"
+                                value="<?= $umkm['alamat']; ?>" required>
+                        </div>
+
                     </div>
 
-                    <!-- DATA UMKM -->
-                    <div class="col-md-8">
-                    <h3 class="fw-bold mb-0"><?= htmlspecialchars($umkm['nama_umkm']); ?></h3>
-                    <table class="table table-borderless table-detail">
-                        <tr>
-                        <td>Nama Pemilik</td>
-                        <td>: <?= htmlspecialchars($umkm['nama_pemilik']); ?></td>
-                        </tr>
-                        <tr>
-                        <td>NIK</td>
-                        <td>: <?= htmlspecialchars($umkm['nik']); ?></td>
-                        </tr>
-                        <tr>
-                        <td>No HP</td>
-                        <td>: <?= htmlspecialchars($umkm['no_hp']); ?></td>
-                        </tr>
-                        <tr>
-                        <td>Email</td>
-                        <td>: <?= htmlspecialchars($umkm['email']); ?></td>
-                        </tr>
-                        <tr>
-                        <td>Jenis Usaha</td>
-                        <td>: <?= htmlspecialchars($umkm['jenis_usaha']); ?></td>
-                        </tr>
-                        <tr>
-                        <td>Kategori</td>
-                        <td>: <?= htmlspecialchars($umkm['kategori_usaha']); ?></td>
-                        </tr>
-                        <tr>
-                        <td>Wilayah</td>
-                        <td>: <?= htmlspecialchars($umkm['wilayah']); ?></td>
-                        </tr>
-                        <tr>
-                        <td>Kelurahan</td>
-                        <td>: <?= htmlspecialchars($umkm['kelurahan']); ?></td>
-                        </tr>
-                    </table>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Foto UMKM</label><br>
+                            <img src="../../asset/images/umkm/<?= $umkm['foto']; ?>"
+                                class="img-thumbnail mb-2"
+                                style="width:150px; height:150px; object-fit:cover;">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Ganti Foto (Opsional)</label>
+                            <input type="file" name="foto" class="form-control">
+                            <small class="text-muted">Kosongkan jika tidak diganti</small>
+                        </div>
                     </div>
 
-                </div>
-
-                <hr>
-
-                <!-- ALAMAT -->
-                <div class="row">
-                    <div class="col-md-12">
-                    <h5 class="mb-2">
-                        <i class="mdi mdi-map-marker"></i> Alamat UMKM
-                    </h5>
-                    <p class="text-muted">
-                    <?= nl2br(htmlspecialchars($umkm['alamat'])); ?>                    </p>
+                   <!-- BUTTON AKSI -->
+                    <div class="text-end mt-4">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="mdi mdi-content-save"></i> Update
+                    </button>
+                       
                     </div>
-                </div>
+                    </form>
 
-                <!-- BUTTON AKSI -->
-                <div class="text-end mt-4">
-                    <a href="edit_umkm.php?id_umkm=<?= $umkm['id_umkm']; ?>" class="btn btn-warning t-2 mt-sm-0 btn-icon-text text-center">
-                    <i class="mdi mdi-pencil"></i> Edit
-                    </a>
-                    <a href="export_detail_umkm_pdf.php?id_umkm=<?= $umkm['id_umkm']; ?>" 
-                    class="btn btn-primary t-2 mt-sm-0 btn-icon-text text-center">
-                    <i class="mdi mdi-file-document-outline "></i> Export PDF
-                    </a>
+  
                 </div>
-
-                </div>
+              </div>
             </div>
-
-
+          </div>
+  
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->

@@ -46,25 +46,19 @@ $kodeUMKM = 'UM' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
     <link rel="shortcut icon" href="../../../assets/images/favicon.png" />
   </head>
   <body>
-    <div class="container-scroller">
-      <div class="row p-0 m-0 proBanner" id="proBanner">
-        <div class="col-md-12 p-0 m-0">
-          <div class="card-body card-body-padding px-3 d-flex align-items-center justify-content-between">
-            <div class="ps-lg-3">
-              <div class="d-flex align-items-center justify-content-between">
-                <p class="mb-0 fw-medium me-3 buy-now-text">Free 24/7 customer support, updates, and more with this template!</p>
-                <a href="https://www.bootstrapdash.com/product/plus-admin-template/" target="_blank" class="btn me-2 buy-now-btn border-0">Buy Now</a>
-              </div>
-            </div>
-            <div class="d-flex align-items-center justify-content-between">
-              <a href="https://www.bootstrapdash.com/product/plus-admin-template/"><i class="mdi mdi-home me-3 text-white"></i></a>
-              <button id="bannerClose" class="btn border-0 p-0">
-                <i class="mdi mdi-close text-white"></i>
-              </button>
-            </div>
-          </div>
+     <!-- TOAST NOTIFICATION -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+    <div id="toastError" class="toast align-items-center text-bg-danger border-0" role="alert">
+      <div class="d-flex">
+        <div class="toast-body" id="toastErrorMsg">
+          ❌ Terjadi kesalahan
         </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
       </div>
+    </div>
+    </div>
+
+    <div class="container-scroller">
       <!-- partial:partials/_sidebar.html -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
@@ -130,8 +124,8 @@ $kodeUMKM = 'UM' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
             </a>
             <div class="collapse" id="master-data">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../master-data/jenis-data.html">Jenis Data</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../master-data/wilayah.html">Wilayah</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../master-data/jenis-data.php">Jenis Data</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../master-data/wilayah.php">Wilayah</a></li>
               </ul>
             </div>
           </li>
