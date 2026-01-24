@@ -1,6 +1,7 @@
 <?php
 require '../conn.php';
 
+//tambah data
 if ($_POST['aksi'] === 'tambah') {
   $pengurus = trim($_POST['pengurus']);
   $kode = trim($_POST['Kode_dapen']);
@@ -21,6 +22,7 @@ if ($_POST['aksi'] === 'tambah') {
   exit;
 }
 
+//edit data
 if ($_POST['aksi'] === 'edit') {
     $id       = $_POST['id_pengurus'];
     $pengurus = trim($_POST['pengurus']);
@@ -52,4 +54,32 @@ if ($_POST['aksi'] === 'edit') {
     exit;
   }
   
+  $search = trim($_GET['search'] ?? '');
+
+  // Jika kosong
+  if ($search === '') {
+    header("Location: ../../admin/pages/master-data/pengurus.php?error=kosong");
+    exit;
+  }
   
+  // Cek data
+  $sql = "SELECT COUNT(*) FROM pengurus 
+          WHERE pengurus LIKE :search 
+          OR kode_daerah LIKE :search";
+  
+  $stmt = $conn->prepare($sql);
+  $stmt->execute([
+    ':search' => "%$search%"
+  ]);
+  
+  $jumlah = $stmt->fetchColumn();
+  
+  // Redirect berdasarkan hasil
+  if ($jumlah == 0) {
+    header("Location: ../../admin/pages/master-data/pengurus.php?search=$search&msg=notfound");
+  } else {
+    header("Location: ../../admin/pages/master-data/pengurus.php?search=$search");
+  }
+  exit;
+
+

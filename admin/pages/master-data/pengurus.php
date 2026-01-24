@@ -26,6 +26,22 @@ $stmt = $conn->prepare($sql);
 $stmt->execute();
 $dataPengurus = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+$search = $_GET['search'] ?? '';
+
+$sql = "SELECT * FROM pengurus";
+$params = [];
+
+if ($search !== '') {
+  $sql .= " WHERE pengurus LIKE :search 
+            OR kode_daerah LIKE :search";
+  $params[':search'] = "%$search%";
+}
+
+$stmt = $conn->prepare($sql);
+$stmt->execute($params);
+$dataPengurus = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,7 +49,7 @@ $dataPengurus = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title></title>
+    <title>SIPUMKM | Pengurus</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../../../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../../../assets/vendors/ti-icons/css/themify-icons.css">
@@ -257,6 +273,15 @@ $dataPengurus = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <i class="mdi mdi-plus-circle"></i> Tambah
                 </button >
               </div>
+              
+              <?php if (isset($_GET['msg']) && $_GET['msg'] == 'notfound'): ?>
+                  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="mdi mdi-alert-circle"></i>
+                    Data Pengurus tidak ditemukan
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                  </div>
+              <?php endif; ?>
+
               <?php if (isset($_GET['msg'])): ?>
 
               <?php if ($_GET['msg'] == 'added'): ?>
@@ -286,11 +311,16 @@ $dataPengurus = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="card-body">
 
               <!-- SEARCH -->
-              <div class="row mb-3">
+              <form action="../../../config/proses/pengurus.php" method="get" class="row mb-3">
                 <div class="col-md-4">
-                  <input type="text" class="form-control" placeholder="Cari DaPen">
+                  <input type="text"
+                        name="search"
+                        class="form-control"
+                        placeholder="Cari DaPen">
                 </div>
-              </div>
+              </form>
+
+
 
               <!-- TABLE -->
               <div class="table-responsive">
@@ -534,6 +564,7 @@ $dataPengurus = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </form>
               </div>
             </div>
+
 
 
             <!-- content-wrapper ends -->
