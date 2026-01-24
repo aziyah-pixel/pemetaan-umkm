@@ -7,7 +7,7 @@ require '../config/auth/auth_admin.php';
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Plus Admin</title>
+    <title>SIPUMKM | Beranda</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/ti-icons/css/themify-icons.css">
@@ -93,6 +93,7 @@ require '../config/auth/auth_admin.php';
             <div class="collapse" id="master-data">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="pages/master-data/jenis-data.php">Jenis Data</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/master-data/pengurus.php">Pengurus</a></li>
                 <li class="nav-item"> <a class="nav-link" href="pages/master-data/wilayah.php">Wilayah</a></li>
               </ul>
             </div>
