@@ -18,7 +18,19 @@ if ($_POST['aksi'] === 'tambah') {
     ':jenis'    => $jenis
   ]);
 
-  header("Location: ../../admin/pages/master-data/pengurus.php?msg=added");
+  header("Location: ../../admin/pages/master-data/jenis_usaha.php?msg=added");
+  exit;
+}
+
+//hapus
+if ($_POST['aksi'] === 'hapus') {
+  $id = $_POST['id_usaha'];
+
+  $sql = "DELETE FROM jenis_usaha WHERE id_usaha = :id";
+  $stmt = $conn->prepare($sql);
+  $stmt->execute([':id' => $id]);
+
+  header("Location: ../../admin/pages/master-data/jenis_usaha.php?msg=deleted");
   exit;
 }
 
@@ -29,6 +41,7 @@ if ($search === '') {
   header("Location: ../../admin/pages/master-data/jenis_data.php?error=kosong");
   exit;
 }
+
 
 // Cek data
 $sql = "SELECT COUNT(*) FROM jenis_usaha 

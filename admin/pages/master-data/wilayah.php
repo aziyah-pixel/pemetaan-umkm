@@ -7,7 +7,10 @@ $stmt = $conn->prepare($sql);
 $stmt->execute();
 $wilayah = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
+$sqlDapen = "SELECT DISTINCT kode_daerah FROM pengurus ORDER BY kode_daerah";
+$stmtDapen = $conn->prepare($sqlDapen);
+$stmtDapen->execute();
+$dataDapen = $stmtDapen->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <!DOCTYPE html>
@@ -102,7 +105,7 @@ $wilayah = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </a>
             <div class="collapse" id="master-data">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../master-data/Jenis_usaha.php">Jenis Data</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../master-data/jenis_usaha.php">Jenis Data</a></li>
                 <li class="nav-item"> <a class="nav-link" href="../master-data/pengurus.php">Pengurus</a></li>
                 <li class="nav-item"> <a class="nav-link" href="../master-data/wilayah.php">Wilayah</a></li>
               </ul>
@@ -244,11 +247,15 @@ $wilayah = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 <?php if ($_GET['msg'] == 'added'): ?>
                   <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="mdi mdi-check-circle"></i> Data UMKM berhasil ditambahkan
+                    <i class="mdi mdi-check-circle"></i> Data Wilayah berhasil ditambahkan
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                   </div>
 
-              
+                  <?php elseif ($_GET['msg'] == 'updated'): ?>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  <i class="mdi mdi-check-circle"></i> Data Pengurus berhasil diupdate
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
 
                 <?php elseif ($_GET['msg'] == 'deleted'): ?>
                   <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -286,7 +293,7 @@ $wilayah = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   </thead>
                   <tbody>
                   <?php if (count($wilayah) > 0): ?>
-                        <?php $no = 1; foreach ($datawilayah as $wilayah): ?>
+                        <?php $no = 1; foreach ($wilayah as $wilayah): ?>
                           <tr>
                             <td><?= $no++; ?></td>
 
@@ -296,14 +303,22 @@ $wilayah = $stmt->fetchAll(PDO::FETCH_ASSOC);
                           
 
                             <td class="text-center">
-                              <a href="edit_umkm.php?id_wilayah=<?= $wilayah['id_wilayah']; ?>" class="btn btn-sm btn-warning">
-                                <i class="mdi mdi-pencil"></i>
-                              </a>
-                              <a href="../../../config/proses/umkm.php?aksi=hapus&id_wilayah=<?= $wilayah['id_wilayah']; ?>"
-                                class="btn btn-sm btn-danger"
-                                onclick="return confirm('Yakin ingin menghapus data ini?')">
-                                <i class="mdi mdi-delete"></i>
-                              </a>
+                            <a href="#"
+                              class="btn btn-sm btn-warning btnEditWilayah"
+                              data-id="<?= $wilayah['id_wilayah']; ?>"
+                              data-wilayah="<?= htmlspecialchars($wilayah['wilayah']); ?>"
+                              data-dapen="<?= $wilayah['dapen']; ?>"
+                              data-pengurus="<?= $wilayah['pengurus']; ?>">
+                              <i class="mdi mdi-pencil"></i>
+                            </a>
+
+
+                            <a href="#"
+                              class="btn btn-sm btn-danger btnHapuswilayah"
+                              data-id="<?= $wilayah['id_wilayah']; ?>"
+                              data-nama="<?= htmlspecialchars($wilayah['wilayah']); ?>">
+                              <i class="mdi mdi-delete"></i>
+                            </a>
                             </td>
                           </tr>
                         <?php endforeach; ?>
@@ -339,6 +354,178 @@ $wilayah = $stmt->fetchAll(PDO::FETCH_ASSOC);
           </div>
   
           </div>
+
+           <!-- MODAL TAMBAH WILAYAH -->
+           <div class="modal fade" id="modalTambahWilayah" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <h5 class="modal-title">
+                        <i class="mdi mdi-map-plus text-primary"></i>
+                        Tambah Wilayah
+                      </h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <form action="../../../config/proses/wilayah.php" method="POST">
+                      <div class="modal-body">
+
+                        <input type="hidden" name="aksi" value="tambah">
+
+                        <!-- NAMA WILAYAH -->
+                        <div class="form-group mb-3">
+                          <label>Nama Wilayah</label>
+                          <input type="text"
+                                name="nama_wilayah"
+                                class="form-control"
+                                placeholder="Contoh: Kecamatan Laweyan"
+                                required>
+                        </div>
+
+                        <!-- PILIH DAPEN -->
+                        <div class="form-group mb-3">
+                          <label>Daerah Pemilihan (DaPen)</label>
+                          <select id="tambah_dapen"name="dapen"
+                                  class="form-control"
+                                  required>
+                            <option value="">-- Pilih DaPen --</option>
+                            <?php foreach ($dataDapen as $d): ?>
+                              <option value="<?= $d['kode_daerah']; ?>">
+                                <?= $d['kode_daerah']; ?>
+                              </option>
+                            <?php endforeach; ?>
+                          </select>
+                        </div>
+
+                        <!-- PILIH PENGURUS -->
+                        <div class="form-group mb-3">
+                          <label>Pengurus</label>
+                          <select name="pengurus"
+                             id="tambah_pengurus"
+                                class="form-control"
+                                  required>
+                            <option value="">-- Pilih Pengurus --</option>
+                          </select>
+                        </div>
+
+                      </div>
+
+                      <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-light"
+                                data-bs-dismiss="modal">
+                          <i class="mdi mdi-close"></i> Batal
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                          <i class="mdi mdi-content-save"></i> Simpan
+                        </button>
+                      </div>
+                    </form>
+
+
+                  </div>
+                </div>
+            </div>
+
+                <!-- Modal edit -->
+                <div class="modal fade" id="modalEditWilayah" tabindex="-1">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <form action="../../../config/proses/wilayah.php" method="POST" class="modal-content">
+
+                      <input type="hidden" name="aksi" value="edit">
+                      <input type="hidden" name="id_wilayah" id="edit_id_wilayah">
+
+                      <div class="modal-header">
+                        <h5 class="modal-title">
+                          <i class="mdi mdi-map-edit text-warning"></i> Edit Wilayah
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      </div>
+
+                      <div class="modal-body">
+
+                        <div class="mb-3">
+                          <label>Nama Wilayah</label>
+                          <input type="text" name="wilayah" id="edit_wilayah"
+                                class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                          <label>DaPen</label>
+                          <select name="kode_daerah" id="edit_dapen"
+                                    class="form-control" required>
+                              <option value="">-- Pilih DaPen --</option>
+                              <?php foreach ($dataDapen as $d): ?>
+                                <option value="<?= $d['kode_daerah']; ?>">
+                                  <?= $d['kode_daerah']; ?>
+                                </option>
+                              <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                          <label>Pengurus</label>
+                          <select name="pengurus" id="edit_pengurus"
+                              class="form-control" required>
+                            <option value="">-- Pilih Pengurus --</option>
+                          </select>
+                        </div>
+
+                      </div>
+
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                          <i class="mdi mdi-close"></i> Batal
+                        </button>
+                        <button type="submit" class="btn btn-warning">
+                          <i class="mdi mdi-content-save"></i> Simpan
+                        </button>
+                      </div>
+
+                    </form>
+                  </div>
+                </div>
+
+            <!-- Modal Hapus -->
+            <div class="modal fade" id="modalHapusWilayah" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <form action="../../../config/proses/wilayah.php" method="POST" class="modal-content">
+
+                  <input type="hidden" name="aksi" value="hapus">
+                  <input type="hidden" name="id_wilayah" id="hapus_id_wilayah">
+
+                  <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                      <i class="mdi mdi-alert-circle-outline"></i> Konfirmasi Hapus
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white"
+                            data-bs-dismiss="modal"></button>
+                  </div>
+
+                  <div class="modal-body">
+                    <p>
+                      Apakah Anda yakin ingin menghapus Wilayah:
+                    </p>
+                    <p class="fw-bold text-danger" id="hapus_wilayah"></p>
+                    <p class="mb-0">Data yang dihapus <strong>tidak dapat dikembalikan</strong>.</p>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                            <i class="mdi mdi-close-circle-outline"></i>
+                      Batal
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                      <i class="mdi mdi-delete"></i> Hapus
+                    </button>
+                  </div>
+
+                </form>
+              </div>
+            </div>
+
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
           <footer class="footer">
@@ -378,53 +565,7 @@ $wilayah = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="../../../assets/js/proBanner.js"></script>
     <script src="../../../assets/js/dashboard.js"></script>
     <!-- End custom js for this page -->
-    <script src="../../asset/js/script.js"></script>
-
-    <!-- MODAL TAMBAH WILAYAH -->
-<div class="modal fade" id="modalTambahWilayah" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title">
-          <i class="mdi mdi-map-plus text-primary"></i>
-          Tambah Wilayah
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <form action="../../../config/proses/wilayah.php" method="POST">
-        <div class="modal-body">
-
-          <input type="hidden" name="aksi" value="tambah">
-
-          <div class="form-group mb-3">
-            <label>Nama Wilayah</label>
-            <input type="text"
-                   name="nama_wilayah"
-                   class="form-control"
-                   placeholder="Contoh: Kecamatan Laweyan"
-                   required>
-          </div>
-
-        </div>
-
-        <div class="modal-footer">
-          <button type="button"
-                  class="btn btn-light"
-                  data-bs-dismiss="modal">
-            Batal
-          </button>
-          <button type="submit" class="btn btn-primary">
-            <i class="mdi mdi-content-save"></i>
-            Simpan
-          </button>
-        </div>
-      </form>
-
-    </div>
-  </div>
-</div>
+    <script src="../../asset/js/wilayah.js"></script>
 
   </body>
 </html>

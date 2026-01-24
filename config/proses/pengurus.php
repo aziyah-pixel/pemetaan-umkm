@@ -43,6 +43,7 @@ if ($_POST['aksi'] === 'edit') {
     exit;
   }
 
+  //hapus
   if ($_POST['aksi'] === 'hapus') {
     $id = $_POST['id_pengurus'];
   

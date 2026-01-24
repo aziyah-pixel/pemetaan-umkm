@@ -135,7 +135,7 @@ $dataPengurus = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </a>
             <div class="collapse" id="master-data">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../master-data/Jenis_usaha.php">Jenis Data</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../master-data/jenis_usaha.php">Jenis Data</a></li>
                 <li class="nav-item"> <a class="nav-link" href="../master-data/pengurus.php">Pengurus</a></li>
                 <li class="nav-item"> <a class="nav-link" href="../master-data/wilayah.php">Wilayah</a></li>
               </ul>
