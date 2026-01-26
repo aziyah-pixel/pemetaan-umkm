@@ -80,7 +80,8 @@ require '../config/auth/auth_admin.php';
             </a>
             <div class="collapse" id="operator">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="pages/operator/operator.html">Daftar Operator</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/operator/tambah_operator.php">Tambah Operator</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/operator/operator.php">Daftar Operator</a></li>
               </ul>
             </div>
           </li>
