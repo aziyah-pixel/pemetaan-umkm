@@ -9,15 +9,36 @@ if (!isset($_GET['id_umkm'])) {
 
 $id_umkm = $_GET['id_umkm'];
 
-$sql = "SELECT * FROM umkm WHERE id_umkm = :id";
+$sql = "SELECT 
+u.*,
+w.wilayah,
+j.jenis_usaha
+FROM umkm u
+LEFT JOIN wilayah w ON u.id_wilayah = w.id_wilayah
+LEFT JOIN jenis_usaha j ON u.id_usaha = j.id_usaha
+WHERE u.id_umkm = ?
+LIMIT 1";
 $stmt = $conn->prepare($sql);
-$stmt->execute(['id' => $id_umkm]);
+$stmt->execute([$id_umkm]);
 $umkm = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$umkm) {
     header("Location: data_umkm.php");
     exit;
 }
+
+// Ambil wilayah
+$sql = "SELECT * FROM wilayah ORDER BY wilayah ASC";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$wilayah = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Ambil jenis usaha
+$sql = "SELECT * FROM jenis_usaha ORDER BY jenis_usaha ASC";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$jenis = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -72,7 +93,7 @@ if (!$umkm) {
             <span class="nav-item-head">Menu Utama</span>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="../../index.php>
+            <a class="nav-link" href="../../index.php">
               <i class="mdi mdi-compass-outline menu-icon"></i>
               <span class="menu-title">Beranda</span>
             </a>
@@ -99,7 +120,8 @@ if (!$umkm) {
             </a>
             <div class="collapse" id="operator">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../operator/operator.html">Daftar Operator</a></li>
+              <li class="nav-item"> <a class="nav-link" href="tambah_operator.php">Tambah Operator</a></li>
+              <li class="nav-item"> <a class="nav-link" href="data_operator.php">Data Operator</a></li>
               </ul>
             </div>
           </li>
@@ -111,7 +133,8 @@ if (!$umkm) {
             </a>
             <div class="collapse" id="master-data">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../master-data/jenis-data.php">Jenis Data</a></li>
+              <li class="nav-item"> <a class="nav-link" href="../master-data/jenis_usaha.php">Jenis Data</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../master-data/pengurus.php">Pengurus</a></li>
                 <li class="nav-item"> <a class="nav-link" href="../master-data/wilayah.php">Wilayah</a></li>
               </ul>
             </div>
@@ -246,6 +269,17 @@ if (!$umkm) {
                     <i class="mdi mdi-arrow-left"></i> Kembali
                 </a>
             </div>
+              <!-- TOAST NOTIFICATION -->
+            <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+            <div id="toastError" class="toast align-items-center text-bg-danger border-0" role="alert">
+              <div class="d-flex">
+                <div class="toast-body" id="toastErrorMsg">
+                  ❌ Terjadi kesalahan
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+              </div>
+            </div>
+            </div>
               <!-- FORM -->
             <div class="row">
             <div class="col-md-12 grid-margin stretch-card">
@@ -258,75 +292,161 @@ if (!$umkm) {
                     <input type="hidden" name="id_umkm" value="<?= $umkm['id_umkm']; ?>">
 
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-6">
+                        <div class="form-group">
                             <label>Kode UMKM</label>
-                            <input type="text" name="nama_umkm" class="form-control"
+                            <input type="text" name="kode_umkm" class="form-control"
                                 value="<?= $umkm['kode_umkm']; ?>" required readonly>
                         </div>
+                        </div>
 
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-6">
+                        <div class="form-group">
                             <label>Nama UMKM</label>
                             <input type="text" name="nama_umkm" class="form-control"
                                 value="<?= $umkm['nama_umkm']; ?>" required>
                         </div>
+                        </div>
 
-                        <div class="col-md-6 mb-3">
-                            <label>NIK Pemilik</label>
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Nama Pemilik</label>
                             <input type="text" name="pemilik" class="form-control"
                                 value="<?= $umkm['nama_pemilik']; ?>" required>
                         </div>
+                        </div>
+
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label>NIK Pemilik</label>
+                            <input type="text" name="nik" class="form-control"
+                                value="<?= $umkm['nik']; ?>" required>
+                        </div>
+                        </div>
                         
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-6">
+                        <div class="form-group">
                             <label>Kontak</label>
                             <input type="text" name="no_hp" class="form-control"
                                 value="<?= $umkm['no_hp']; ?>" required>
                         </div>
+                        </div>
 
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-6">
+                        <div class="form-group">
                             <label>Email</label>
                             <input type="text" name="email" class="form-control"
                                 value="<?= $umkm['email']; ?>" required>
                         </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label>Jenis Usaha</label>
-                            <input type="text" name="jenis_usaha" class="form-control"
-                                value="<?= $umkm['jenis_usaha']; ?>" required>
                         </div>
 
-                        <div class="col-md-6 mb-3">
-                            <label>Kategori Usaha</label>
-                            <input type="text" name="kategori" class="form-control"
-                                value="<?= $umkm['kategori_usaha']; ?>" required>
+                          <!-- JENIS USAHA -->
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label>Jenis Usaha</label>
+                          <select class="form-select" name="jenis_usaha" required>
+                            <option value=""><?= $umkm['jenis_usaha']; ?></option>
+                            <?php foreach ($jenis as $j) : ?>
+                              <option value="<?= $j['id_usaha']; ?>">
+                                <?= htmlspecialchars($j['jenis_usaha']); ?>
+                              </option>
+                            <?php endforeach; ?>
+                          </select>
                         </div>
+                      </div>
 
-                        <div class="col-md-6 mb-3">
-                            <label>Wilayah</label>
-                            <input type="text" name="wilayah" class="form-control"
-                                value="<?= $umkm['wilayah']; ?>" required>
+                       <!-- KATEGORI USAHA -->
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label>Kategori Usaha</label>
+                          <select class="form-select" name="kategori_usaha" required>
+                            <option value=""><?= $umkm['kategori_usaha']; ?></option>
+                            <option>Mikro</option>
+                            <option>Kecil</option>
+                            <option>Menengah</option>
+                          </select>
+                          <div class="invalid-feedback">Pilih kategori usaha</div>
                         </div>
+                      </div>
 
-                        <div class="col-md-6 mb-3">
-                            <label>Alamat</label>
-                            <input type="text" name="alamat" class="form-control"
-                                value="<?= $umkm['alamat']; ?>" required>
+                        <div class="col-md-12">
+                        <div class="form-group">
+                          <label>Wilayah</label>
+                          <select class="form-select" name="wilayah_umkm" required>
+                            <option value=""><?= $umkm['wilayah']; ?></option>
+                            <?php foreach ($wilayah as $w) : ?>
+                              <option value="<?= $w['id_wilayah']; ?>">
+                                <?= htmlspecialchars($w['wilayah']); ?>
+                              </option>
+                            <?php endforeach; ?>
+                          </select>
                         </div>
+                      </div>
+
+                       <!-- KELURAHAN -->
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label>Kelurahan</label>
+                          <input type="text" class="form-control" name="kelurahan_umkm" 
+                          value="<?= $umkm['kelurahan']; ?>"required>
+                        </div>
+                      </div>
+  
+                      <!-- RT -->
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label>RT</label>
+                          <input type="text" class="form-control" name="rt_umkm"
+                          value="<?= $umkm['rt']; ?>" required>
+                        </div>
+                      </div>
+  
+                      <!-- RW -->
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label>RW</label>
+                          <input type="text" class="form-control" name="rw_umkm" 
+                          value="<?= $umkm['rw']; ?>"required>
+                        </div>
+                      </div>
+  
+                      <!-- ALAMAT -->
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label>Alamat UMKM</label>
+                          <textarea class="form-control" rows="3" name="alamat_umkm" 
+                          value="<?= $umkm['alamat']; ?>" ></textarea>
+                        </div>
+                      </div>
 
                     </div>
 
                     
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label>Foto UMKM</label><br>
-                            <img src="../../asset/images/umkm/<?= $umkm['foto']; ?>"
-                                class="img-thumbnail mb-2"
-                                style="width:150px; height:150px; object-fit:cover;">
+                        <!-- PREVIEW FOTO -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                            <label>Preview Foto</label><br>
+                            <img id="previewFoto"
+                                src="../../asset/images/umkm/<?= $umkm['foto']; ?>"
+                                class="img-thumbnail"
+                                style="max-height: 150px;">
+                            </div>
                         </div>
 
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
                             <label>Ganti Foto (Opsional)</label>
-                            <input type="file" name="foto" class="form-control">
-                            <small class="text-muted">Kosongkan jika tidak diganti</small>
+                            <input type="file"
+                                    name="foto"
+                                    class="form-control"
+                                    id="fotoUMKM"
+                                    accept="image/png, image/jpeg"
+                                    value ="<?= $umkm['foto']?>"
+                                    >
+                            <small class="text-muted">Format JPG / PNG, Maks. 2MB</small>
+                            <div class="invalid-feedback">Foto UMKM wajib diunggah</div>
+                            </div>
                         </div>
                     </div>
 

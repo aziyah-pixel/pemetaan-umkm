@@ -20,6 +20,18 @@ if ($lastKode) {
 // format jadi UM001
 $kodeUMKM = 'UM' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
 
+// Ambil wilayah
+$sql = "SELECT * FROM wilayah ORDER BY wilayah ASC";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$wilayah = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Ambil jenis usaha
+$sql = "SELECT * FROM jenis_usaha ORDER BY jenis_usaha ASC";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$jenis = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -85,7 +97,7 @@ $kodeUMKM = 'UM' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
             <span class="nav-item-head">Menu Utama</span>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="../../index.php>
+            <a class="nav-link" href="../../index.php">
               <i class="mdi mdi-compass-outline menu-icon"></i>
               <span class="menu-title">Beranda</span>
             </a>
@@ -323,28 +335,29 @@ $kodeUMKM = 'UM' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
                           <div class="invalid-feedback">Email tidak valid</div>
                         </div>
                       </div>
-  
-                      <!-- JENIS USAHA -->
+
+                        <!-- JENIS USAHA -->
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>Jenis Usaha</label>
                           <select class="form-select" name="jenis_usaha" required>
-                            <option value="">Pilih</option>
-                            <option>Kuliner</option>
-                            <option>Fashion</option>
-                            <option>Kerajinan</option>
-                            <option>Jasa</option>
+                            <option value="">-- Pilih Jenis Usaha --</option>
+                            <?php foreach ($jenis as $j) : ?>
+                              <option value="<?= $j['id_usaha']; ?>">
+                                <?= htmlspecialchars($j['jenis_usaha']); ?>
+                              </option>
+                            <?php endforeach; ?>
                           </select>
-                          <div class="invalid-feedback">Pilih jenis usaha</div>
                         </div>
                       </div>
+
   
                       <!-- KATEGORI USAHA -->
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>Kategori Usaha</label>
                           <select class="form-select" name="kategori_usaha" required>
-                            <option value="">Pilih</option>
+                            <option value="">-- Pilih --</option>
                             <option>Mikro</option>
                             <option>Kecil</option>
                             <option>Menengah</option>
@@ -358,9 +371,13 @@ $kodeUMKM = 'UM' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
                         <div class="form-group">
                           <label>Wilayah</label>
                           <select class="form-select" name="wilayah_umkm" required>
-                            <option value="">Pilih Wilayah</option>
+                            <option value="">-- Pilih Wilayah --</option>
+                            <?php foreach ($wilayah as $w) : ?>
+                              <option value="<?= $w['id_wilayah']; ?>">
+                                <?= htmlspecialchars($w['wilayah']); ?>
+                              </option>
+                            <?php endforeach; ?>
                           </select>
-                          <div class="invalid-feedback">Wilayah wajib dipilih</div>
                         </div>
                       </div>
   
@@ -420,7 +437,7 @@ $kodeUMKM = 'UM' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
                             <div class="form-group">
                             <label>Preview Foto</label><br>
                             <img id="previewFoto"
-                                src="../../../assets/images/default-image.png"
+                                src="../../asset/images/umkm/default-image.jpeg"
                                 class="img-thumbnail"
                                 style="max-height: 150px;">
                             </div>

@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!allowedTypes.includes(file.type)) {
           showToastError("❌ Format file harus JPG atau PNG");
           this.value = '';
-          preview.src = '../../../assets/images/default-image.jpeg';
+          preview.src = '../images/umkm/default-image.jpeg';
           return;
         }
 
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (file.size > maxSize) {
           showToastError("❌ Ukuran file maksimal 2MB");
           this.value = '';
-          preview.src = '../../../assets/images/default-image.jpeg';
+          preview.src = '../images/umkm/default-image.jpeg';
           return;
         }
 

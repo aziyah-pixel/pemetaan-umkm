@@ -60,7 +60,7 @@ if ($aksi === 'tambah') {
   /* ==========================
      PROSES FOTO
   ========================== */
-  $defaultFoto = "default-image.png";
+  $defaultFoto = "default-image.jpeg";
   $namaFoto = $defaultFoto;
 
   if (
@@ -95,7 +95,7 @@ if ($aksi === 'tambah') {
   ========================== */
   $sql = "INSERT INTO umkm (
       kode_umkm, nama_umkm, nama_pemilik, nik, no_hp, email,
-      jenis_usaha, kategori_usaha, wilayah,
+      id_usaha, kategori_usaha, id_wilayah,
       kelurahan, rt, rw, alamat, foto, operator
     ) VALUES (
       :kode_umkm, :nama_umkm, :nama_pemilik, :nik, :no_hp, :email,
@@ -134,12 +134,16 @@ if ($aksi == 'edit') {
   $id_umkm     = $_POST['id_umkm'];
   $nama_umkm   = $_POST['nama_umkm'];
   $pemilik     = $_POST['pemilik'];
+  $nik         = $_POST['nik'];
   $no_hp       = $_POST['no_hp'];
   $email       = $_POST['email'];
   $jenis_usaha = $_POST['jenis_usaha'];
-  $kategori    = $_POST['kategori'];
-  $wilayah     = $_POST['wilayah'];
-  $alamat      = $_POST['alamat'];
+  $kategori    = $_POST['kategori_usaha'];
+  $wilayah     = $_POST['wilayah_umkm'];
+  $kelurahan   = $_POST['kelurahan_umkm'];
+  $rt          = $_POST['rt_umkm'];
+  $rw          = $_POST['rw_umkm'];
+  $alamat      = $_POST['alamat_umkm'];
 
   // FOTO
   if (!empty($_FILES['foto']['name'])) {
@@ -152,11 +156,15 @@ if ($aksi == 'edit') {
       $sql = "UPDATE umkm SET 
               nama_umkm    = :nama,
               nama_pemilik = :pemilik,
+              nik          = :nik,
               no_hp        = :no_hp,
               email        = :email,
-              jenis_usaha  = :jenis,
+              id_usaha  = :jenis,
               kategori_usaha     = :kategori,
-              wilayah      = :wilayah,
+              id_wilayah      = :wilayah,
+              kelurahan    = :kelurahan,
+              rt           = :rt,
+              rw           = :rw,
               alamat       = :alamat,
               foto         = :foto
               WHERE id_umkm = :id";
@@ -165,11 +173,15 @@ if ($aksi == 'edit') {
       $stmt->execute([
           ':nama'    => $nama_umkm,
           ':pemilik' => $pemilik,
+          ':nik' => $nik,
           ':no_hp'   => $no_hp,
           ':email'   => $email,
           ':jenis'   => $jenis_usaha,
           ':kategori'=> $kategori,
           ':wilayah' => $wilayah,
+          ':kelurahan' => $kelurahan,
+          ':rt' => $rt,
+          ':rw' => $rw,
           ':alamat'  => $alamat,
           ':foto'    => $foto,
           ':id'      => $id_umkm
@@ -180,11 +192,15 @@ if ($aksi == 'edit') {
       $sql = "UPDATE umkm SET 
               nama_umkm    = :nama,
               nama_pemilik = :pemilik,
+              nik          = :nik,
               no_hp        = :no_hp,
               email        = :email,
-              jenis_usaha  = :jenis,
+              id_usaha  = :jenis,
               kategori_usaha     = :kategori,
-              wilayah      = :wilayah,
+              id_wilayah      = :wilayah,
+              kelurahan    = :kelurahan,
+              rt           = :rt,
+              rw           = :rw,
               alamat       = :alamat
               WHERE id_umkm = :id";
 
@@ -192,11 +208,15 @@ if ($aksi == 'edit') {
       $stmt->execute([
         ':nama'    => $nama_umkm,
         ':pemilik' => $pemilik,
+        ':nik' => $nik,
         ':no_hp'   => $no_hp,
         ':email'   => $email,
         ':jenis'   => $jenis_usaha,
         ':kategori'=> $kategori,
         ':wilayah' => $wilayah,
+        ':kelurahan' => $kelurahan,
+        ':rt' => $rt,
+        ':rw' => $rw,
         ':alamat'  => $alamat,
         ':id'      => $id_umkm
       ]);

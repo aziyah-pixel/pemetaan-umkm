@@ -475,7 +475,7 @@ $dataDapen = $stmtDapen->fetchAll(PDO::FETCH_ASSOC);
                       </div>
 
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
                           <i class="mdi mdi-close"></i> Batal
                         </button>
                         <button type="submit" class="btn btn-warning">

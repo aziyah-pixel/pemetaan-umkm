@@ -11,7 +11,15 @@ if (!isset($_GET['id_umkm']) || empty($_GET['id_umkm'])) {
 $id_umkm = $_GET['id_umkm'];
 
 // AMBIL DATA UMKM
-$sql = "SELECT * FROM umkm WHERE id_umkm = ?";
+$sql = "SELECT 
+u.*,
+w.wilayah,
+j.jenis_usaha
+FROM umkm u
+LEFT JOIN wilayah w ON u.id_wilayah = w.id_wilayah
+LEFT JOIN jenis_usaha j ON u.id_usaha = j.id_usaha
+WHERE u.id_umkm = ?
+LIMIT 1";
 $stmt = $conn->prepare($sql);
 $stmt->execute([$id_umkm]);
 $umkm = $stmt->fetch(PDO::FETCH_ASSOC);

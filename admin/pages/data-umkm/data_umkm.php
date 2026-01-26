@@ -2,12 +2,20 @@
 require '../../../config/auth/auth_admin.php';
 require '../../../config/conn.php';
 
-$sql = "SELECT * FROM umkm ORDER BY id_umkm DESC";
+$sql = " SELECT 
+u.id_umkm,
+u.kode_umkm,
+u.nama_umkm,
+u.kategori_usaha,
+w.wilayah,
+j.jenis_usaha
+FROM umkm u
+LEFT JOIN wilayah w ON u.id_wilayah = w.id_wilayah
+LEFT JOIN jenis_usaha j ON u.id_usaha = j.id_usaha
+ORDER BY u.id_umkm DESC";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 $dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
 
 ?>
 <!DOCTYPE html>
@@ -305,11 +313,12 @@ $dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
                               <a href="edit_umkm.php?id_umkm=<?= $umkm['id_umkm']; ?>" class="btn btn-sm btn-warning">
                                 <i class="mdi mdi-pencil"></i>
                               </a>
-                              <a href="../../../config/proses/umkm.php?aksi=hapus&id_umkm=<?= $umkm['id_umkm']; ?>"
-                                class="btn btn-sm btn-danger"
-                                onclick="return confirm('Yakin ingin menghapus data ini?')">
-                                <i class="mdi mdi-delete"></i>
-                              </a>
+                              <a href="#"
+                              class="btn btn-sm btn-danger btnHapusUmkm"
+                              data-id="<?= $umkm['id_umkm']; ?>"
+                              data-nama="<?= htmlspecialchars($umkm['nama_umkm']); ?>">
+                              <i class="mdi mdi-delete"></i>
+                            </a>
                             </td>
                           </tr>
                         <?php endforeach; ?>
@@ -345,6 +354,45 @@ $dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
           </div>
   
           </div>
+
+           <!-- Modal Hapus -->
+           <div class="modal fade" id="modalHapusUmkm" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <form action="../../../config/proses/umkm.php" method="GET" class="modal-content">
+
+                  <input type="hidden" name="aksi" value="hapus">
+                  <input type="hidden" name="id_umkm" id="hapus_id_umkm">
+
+                  <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                      <i class="mdi mdi-alert-circle-outline"></i> Konfirmasi Hapus
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white"
+                            data-bs-dismiss="modal"></button>
+                  </div>
+
+                  <div class="modal-body">
+                    <p>
+                      Apakah Anda yakin ingin menghapus UMKM:
+                    </p>
+                    <p class="fw-bold text-danger" id="hapus_nama_umkm"></p>
+                    <p class="mb-0">Data yang dihapus <strong>tidak dapat dikembalikan</strong>.</p>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                            <i class="mdi mdi-close-circle-outline"></i>
+                      Batal
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                      <i class="mdi mdi-delete"></i> Hapus
+                    </button>
+                  </div>
+
+                </form>
+              </div>
+            </div>
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
           <footer class="footer">
@@ -391,11 +439,35 @@ $dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </script>
     <?php endif; ?>
 
-    <?php if (isset($_GET['notfound'])): ?>
     <script>
-      alert('Data UMKM tidak ditemukan');
+     
+
+      /* =========================
+       MODAL HAPUS usaha
+    ========================= */
+    const hapusButtons = document.querySelectorAll('.btnHapusUmkm');
+  
+  if (hapusButtons.length > 0) {
+    hapusButtons.forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const nama = document.getElementById('hapus_nama_umkm');
+        const inputId  = document.getElementById('hapus_id_umkm');
+        const modalEl = document.getElementById('modalHapusUmkm');
+
+        if (inputId && nama && modalEl) {
+          inputId.value = this.dataset.id;
+          nama.innerText = this.dataset.nama;
+
+
+          new bootstrap.Modal(modalEl).show();
+        }
+      });
+    });
+  }
+
     </script>
-    <?php endif; ?>
 
   </body>
 </html>
