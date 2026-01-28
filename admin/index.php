@@ -120,7 +120,7 @@ require '../config/auth/auth_admin.php';
             </a>
             <div class="collapse" id="auth">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../pages/samples/blank-page.html"> Profil </a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/profil/profil.php"> Profil </a></li>
                 <li class="nav-item"> <a class="nav-link" href="../pages/samples/login.html"> Log Out </a></li>
               </ul>
             </div>
