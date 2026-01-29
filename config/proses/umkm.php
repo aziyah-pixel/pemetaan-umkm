@@ -262,3 +262,33 @@ if (isset($_GET['aksi']) && $_GET['aksi'] === 'hapus') {
   header("Location: ../../admin/pages/data-umkm/data_umkm.php?msg=deleted");
   exit;
 }
+
+$search = trim($_GET['search'] ?? '');
+
+// Jika kosong
+if ($search === '') {
+  header("Location: ../../admin/pages/data-umkm/data_umkm.php?error=kosong");
+  exit;
+}
+
+// Cek data
+$sql = "SELECT COUNT(*) FROM pengurus 
+        WHERE pengurus LIKE :search 
+        OR kode_daerah LIKE :search";
+
+$stmt = $conn->prepare($sql);
+$stmt->execute([
+  ':search' => "%$search%"
+]);
+
+$jumlah = $stmt->fetchColumn();
+
+// Redirect berdasarkan hasil
+if ($jumlah == 0) {
+  header("Location: ../../admin/pages/data-umkm/data_umkm.php?search=$search&msg=notfound");
+} else {
+  header("Location: ../../admin/pages/data-umkm/data_umkm.php?search=$search");
+}
+exit;
+
+?>

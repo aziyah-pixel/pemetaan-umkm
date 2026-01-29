@@ -107,7 +107,7 @@ require '../config/auth/auth_admin.php';
             </a>
             <div class="collapse" id="laporan">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="pages/laporan/lap-umkm.html">Data UMKM</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/laporan/lap-umkm.php">Data UMKM</a></li>
                 <li class="nav-item"> <a class="nav-link" href="pages/laporan/lap-operator.html">Data Operator</a></li>
               </ul>
             </div>

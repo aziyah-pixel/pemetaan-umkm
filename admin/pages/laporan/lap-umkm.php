@@ -3,10 +3,7 @@ require '../../../config/auth/auth_admin.php';
 require '../../../config/conn.php';
 
 $sql = " SELECT 
-u.id_umkm,
-u.kode_umkm,
-u.nama_umkm,
-u.kategori_usaha,
+u.*,
 w.wilayah,
 j.jenis_usaha
 FROM umkm u
@@ -16,6 +13,21 @@ ORDER BY u.id_umkm DESC";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 $dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$search = $_GET['search'] ?? '';
+
+$sql = "SELECT * FROM umkm";
+$params = [];
+
+if ($search !== '') {
+  $sql .= " WHERE nama_umkm LIKE :search 
+            OR kode_umkm LIKE :search";
+  $params[':search'] = "%$search%";
+}
+
+$stmt = $conn->prepare($sql);
+$stmt->execute($params);
+$dataPengurus = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <!DOCTYPE html>
@@ -242,28 +254,17 @@ $dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <i class="mdi mdi-store text-primary"></i>
                   Daftar UMKM
                 </h3>
-                <a href="tambah_umkm.php" class="btn btn-success mt-2 mt-sm-0 btn-icon-text text-center">
-                  <i class="mdi mdi-plus-circle"></i> Tambah
+                <a href="tambah_umkm.php" class="btn btn-primary mt-2 mt-sm-0 btn-icon-text text-center">
+                <i class="mdi mdi-file-document-outline "></i> Cetak
                 </a>
               </div>
-              <?php if (isset($_GET['msg'])): ?>
-
-                <?php if ($_GET['msg'] == 'added'): ?>
-                  <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="mdi mdi-check-circle"></i> Data UMKM berhasil ditambahkan
+              <?php if (isset($_GET['msg']) && $_GET['msg'] == 'notfound'): ?>
+                  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="mdi mdi-alert-circle"></i>
+                    Data Pengurus tidak ditemukan
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                   </div>
-
-              
-
-                <?php elseif ($_GET['msg'] == 'deleted'): ?>
-                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="mdi mdi-delete"></i> Data UMKM berhasil dihapus
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                  </div>
-                <?php endif; ?>
-
-                <?php endif; ?>
+              <?php endif; ?>
 
 
         <!-- CARD -->
@@ -271,11 +272,14 @@ $dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="card-body">
 
               <!-- SEARCH -->
-              <div class="row mb-3">
+              <form action="../../../config/proses/laporan.php" method="get" class="row mb-3">
                 <div class="col-md-4">
-                  <input type="text" class="form-control" placeholder="Cari Nama UMKM / Pemilik">
+                  <input type="text"
+                        name="search"
+                        class="form-control"
+                        placeholder="Cari DaPen">
                 </div>
-              </div>
+              </form>
 
               <!-- TABLE -->
               <div class="table-responsive">
@@ -285,10 +289,15 @@ $dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
                       <th>No</th>
                       <th>Kode UMKM</th>
                       <th>Nama UMKM</th>
-                      <th>Jenis Usaha</th>
-                      <th>Kategori Usaha</th>
+                      <th>Pemilik UMKM</th>
+                      <th>NIK Pemilik</th>
+                      <th>Email</th>
+                      <th>Kontak</th>
+                      <th>Jenis UMKM</th>
+                      <th>Kategori UMKM</th>
                       <th>Wilayah</th>
-                      <th class="text-center">Aksi</th>
+                      <th>Alamat UMKM</th>
+                      <th>Operator</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -299,27 +308,17 @@ $dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                             <td><?= htmlspecialchars($umkm['kode_umkm']); ?></td>
                             <td><?= htmlspecialchars($umkm['nama_umkm']); ?></td>
+                            <td><?= htmlspecialchars($umkm['nama_pemilik']); ?></td>
+                            <td><?= htmlspecialchars($umkm['nik']); ?></td>
+                            <td><?= htmlspecialchars($umkm['email']); ?></td>
+                            <td><?= htmlspecialchars($umkm['no_hp']); ?></td>
                             <td><?= htmlspecialchars($umkm['jenis_usaha']); ?></td>
                             <td><?= htmlspecialchars($umkm['kategori_usaha']); ?></td>
                             <td><?= htmlspecialchars($umkm['wilayah']); ?></td>
+                            <td><?= htmlspecialchars($umkm['alamat']); ?></td>
+                            <td><?= htmlspecialchars($umkm['operator']); ?></td>
 
 
-                          
-
-                            <td class="text-center">
-                              <a href="detail_umkm.php?id_umkm=<?= $umkm['id_umkm']; ?>" class="btn btn-sm btn-info">
-                                <i class="mdi mdi-eye"></i>
-                              </a>
-                              <a href="edit_umkm.php?id_umkm=<?= $umkm['id_umkm']; ?>" class="btn btn-sm btn-warning">
-                                <i class="mdi mdi-pencil"></i>
-                              </a>
-                              <a href="#"
-                              class="btn btn-sm btn-danger btnHapusUmkm"
-                              data-id="<?= $umkm['id_umkm']; ?>"
-                              data-nama="<?= htmlspecialchars($umkm['nama_umkm']); ?>">
-                              <i class="mdi mdi-delete"></i>
-                            </a>
-                            </td>
                           </tr>
                         <?php endforeach; ?>
                       <?php else: ?>
@@ -355,41 +354,12 @@ $dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
   
           </div>
 
-           <!-- Modal Hapus -->
-           <div class="modal fade" id="modalHapusUmkm" tabindex="-1" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered">
-                <form action="../../../config/proses/umkm.php" method="GET" class="modal-content">
 
-                  <input type="hidden" name="aksi" value="hapus">
-                  <input type="hidden" name="id_umkm" id="hapus_id_umkm">
 
-                  <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title">
-                      <i class="mdi mdi-alert-circle-outline"></i> Konfirmasi Hapus
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white"
-                            data-bs-dismiss="modal"></button>
-                  </div>
-
-                  <div class="modal-body">
-                    <p>
-                      Apakah Anda yakin ingin menghapus UMKM:
-                    </p>
-                    <p class="fw-bold text-danger" id="hapus_nama_umkm"></p>
-                    <p class="mb-0">Data yang dihapus <strong>tidak dapat dikembalikan</strong>.</p>
-                  </div>
-
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">
-                            <i class="mdi mdi-close-circle-outline"></i>
-                      Batal
-                    </button>
-                    <button type="submit" class="btn btn-danger">
-                      <i class="mdi mdi-delete"></i> Hapus
-                    </button>
-                  </div>
-
+                </form>
+              </div>
+            </div>
+        
                 </form>
               </div>
             </div>
