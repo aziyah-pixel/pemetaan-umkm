@@ -110,9 +110,9 @@ $jenis = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </a>
             <div class="collapse" id="data-umkm">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../data-umkm/tambah_umkm.php">Tambah Data</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../data-umkm/data_umkm.php">Data UMKM</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../data-umkm/detail_umkm.php">Detail UMKM</a></li>
+                <li class="nav-item"> <a class="nav-link" href="tambah_umkm.php">Tambah Data</a></li>
+                <li class="nav-item"> <a class="nav-link" href="data_umkm.php">Data UMKM</a></li>
+                <li class="nav-item"> <a class="nav-link" href="detail_umkm.php">Detail UMKM</a></li>
               </ul>
             </div>
           </li>
@@ -124,7 +124,8 @@ $jenis = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </a>
             <div class="collapse" id="operator">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../operator/operator.html">Daftar Operator</a></li>
+              <li class="nav-item"> <a class="nav-link" href="../operator/tambah_operator.php">Tambah Operator</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../operator/data_operator.php">Daftar Operator</a></li>
               </ul>
             </div>
           </li>
@@ -136,7 +137,8 @@ $jenis = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </a>
             <div class="collapse" id="master-data">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../master-data/jenis-data.php">Jenis Data</a></li>
+              <li class="nav-item"> <a class="nav-link" href="../master-data/jenis_usaha.php">Jenis Data</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../master-data/pengurus.php">Pengurus</a></li>
                 <li class="nav-item"> <a class="nav-link" href="../master-data/wilayah.php">Wilayah</a></li>
               </ul>
             </div>
@@ -149,8 +151,7 @@ $jenis = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </a>
             <div class="collapse" id="laporan">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../laporan/lap-umkm.html">Data UMKM</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../laporan/lap-operator.html">Data Operator</a></li>
+              <li class="nav-item"> <a class="nav-link" href="../laporan/lap-umkm.php">Data UMKM</a></li>
               </ul>
             </div>
           </li>
@@ -162,8 +163,8 @@ $jenis = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </a>
             <div class="collapse" id="auth">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../profil/profil.html"> Profil </a></li>
-                <li class="nav-item"> <a class="nav-link" href="../samples/login.html"> Log Out </a></li>
+              <li class="nav-item"> <a class="nav-link" href="../profil/profil.php"> Profil </a></li>
+                <li class="nav-item"> <a class="nav-link" href="../profil/logout.php"> Log Out </a></li>
               </ul>
             </div>
           </li>

@@ -272,9 +272,9 @@ if ($search === '') {
 }
 
 // Cek data
-$sql = "SELECT COUNT(*) FROM pengurus 
-        WHERE pengurus LIKE :search 
-        OR kode_daerah LIKE :search";
+$sql = "SELECT COUNT(*) FROM umkm 
+        WHERE nama_umkm LIKE :search 
+        OR kode_umkm LIKE :search";
 
 $stmt = $conn->prepare($sql);
 $stmt->execute([

@@ -131,8 +131,7 @@ $dataPenguna = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </a>
             <div class="collapse" id="laporan">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../laporan/lap-umkm.html">Data UMKM</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../laporan/lap-operator.html">Data Operator</a></li>
+              <li class="nav-item"> <a class="nav-link" href="../laporan/lap-umkm.php">Data UMKM</a></li>
               </ul>
             </div>
           </li>
@@ -144,8 +143,8 @@ $dataPenguna = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </a>
             <div class="collapse" id="auth">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../profil/profil.html"> Profil </a></li>
-                <li class="nav-item"> <a class="nav-link" href="../samples/login.html"> Log Out </a></li>
+              <li class="nav-item"> <a class="nav-link" href="../profil/profil.php"> Profil </a></li>
+                <li class="nav-item"> <a class="nav-link" href="../profil/logout.php"> Log Out </a></li>
               </ul>
             </div>
           </li>

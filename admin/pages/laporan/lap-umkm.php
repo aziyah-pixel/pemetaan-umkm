@@ -16,7 +16,13 @@ $dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $search = $_GET['search'] ?? '';
 
-$sql = "SELECT * FROM umkm";
+$sql = "SELECT 
+u.*,
+w.wilayah,
+j.jenis_usaha
+FROM umkm u
+LEFT JOIN wilayah w ON u.id_wilayah = w.id_wilayah
+LEFT JOIN jenis_usaha j ON u.id_usaha = j.id_usaha";
 $params = [];
 
 if ($search !== '') {
@@ -27,7 +33,7 @@ if ($search !== '') {
 
 $stmt = $conn->prepare($sql);
 $stmt->execute($params);
-$dataPengurus = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <!DOCTYPE html>
@@ -110,7 +116,8 @@ $dataPengurus = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </a>
             <div class="collapse" id="operator">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../operator/operator.html">Daftar Operator</a></li>
+              <li class="nav-item"> <a class="nav-link" href="../operator/tambah_operator.php">Tambah Operator</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../operator/data_operator.php">Daftar Operator</a></li>
               </ul>
             </div>
           </li>
@@ -122,7 +129,8 @@ $dataPengurus = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </a>
             <div class="collapse" id="master-data">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../master-data/jenis-data.php">Jenis Data</a></li>
+              <li class="nav-item"> <a class="nav-link" href="../master-data/jenis_usaha.php">Jenis Data</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../master-data/pengurus.php">Pengurus</a></li>
                 <li class="nav-item"> <a class="nav-link" href="../master-data/wilayah.php">Wilayah</a></li>
               </ul>
             </div>
@@ -135,8 +143,7 @@ $dataPengurus = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </a>
             <div class="collapse" id="laporan">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../laporan/lap-umkm.php">Data UMKM</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../laporan/lap-operator.html">Data Operator</a></li>
+              <li class="nav-item"> <a class="nav-link" href="lap-umkm.php">Data UMKM</a></li>
               </ul>
             </div>
           </li>
@@ -148,8 +155,8 @@ $dataPengurus = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </a>
             <div class="collapse" id="auth">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../profil/profil.html"> Profil </a></li>
-                <li class="nav-item"> <a class="nav-link" href="../samples/login.html"> Log Out </a></li>
+              <li class="nav-item"> <a class="nav-link" href="../profil/profil.php"> Profil </a></li>
+                <li class="nav-item"> <a class="nav-link" href="../profil/logout.php"> Log Out </a></li>
               </ul>
             </div>
           </li>

@@ -81,7 +81,7 @@ require '../config/auth/auth_admin.php';
             <div class="collapse" id="operator">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="pages/operator/tambah_operator.php">Tambah Operator</a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/operator/operator.php">Daftar Operator</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/operator/data_operator.php">Daftar Operator</a></li>
               </ul>
             </div>
           </li>
@@ -93,7 +93,7 @@ require '../config/auth/auth_admin.php';
             </a>
             <div class="collapse" id="master-data">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="pages/master-data/jenis-data.php">Jenis Data</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/master-data/jenis_usaha.php">Jenis Data</a></li>
                 <li class="nav-item"> <a class="nav-link" href="pages/master-data/pengurus.php">Pengurus</a></li>
                 <li class="nav-item"> <a class="nav-link" href="pages/master-data/wilayah.php">Wilayah</a></li>
               </ul>
@@ -108,7 +108,6 @@ require '../config/auth/auth_admin.php';
             <div class="collapse" id="laporan">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="pages/laporan/lap-umkm.php">Data UMKM</a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/laporan/lap-operator.html">Data Operator</a></li>
               </ul>
             </div>
           </li>
@@ -121,7 +120,7 @@ require '../config/auth/auth_admin.php';
             <div class="collapse" id="auth">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="pages/profil/profil.php"> Profil </a></li>
-                <li class="nav-item"> <a class="nav-link" href="../pages/samples/login.html"> Log Out </a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/profil/logout.php"> Log Out </a></li>
               </ul>
             </div>
           </li>
