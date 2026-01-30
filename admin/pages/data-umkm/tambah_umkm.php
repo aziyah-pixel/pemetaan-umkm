@@ -2,22 +2,29 @@
 require '../../../config/auth/auth_admin.php';
 require '../../../config/conn.php';
 
-// ambil kode UMKM terakhir
-$sql = "SELECT kode_umkm FROM umkm ORDER BY id_umkm DESC LIMIT 1";
+$id_penguna = $_SESSION['id_penguna'];
+
+// ambil kode UMKM terakhir MILIK penguna ini
+$sql = "SELECT kode_umkm 
+        FROM umkm 
+        WHERE id_penguna = ?
+        ORDER BY id_umkm DESC 
+        LIMIT 1";
+
 $stmt = $conn->prepare($sql);
-$stmt->execute();
+$stmt->execute([$id_penguna]);
 
 $lastKode = $stmt->fetchColumn();
 
 if ($lastKode) {
-    // ambil angka dari UM001 → 001
+    // UM001 → 001
     $lastNumber = (int) substr($lastKode, 2);
-    $newNumber = $lastNumber + 1;
+    $newNumber  = $lastNumber + 1;
 } else {
     $newNumber = 1;
 }
 
-// format jadi UM001
+// format: UM001
 $kodeUMKM = 'UM' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
 
 // Ambil wilayah
@@ -284,6 +291,7 @@ $jenis = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="row">
                     <input type="hidden" name="aksi" value="tambah">
                     <input type="hidden" name="operator" value="<?= $_SESSION['nama_penguna']; ?>">
+                    <input type="hidden" name="id_operator" value="<?= $id_penguna ?>">
                     <!-- kode UMKM -->
                     <div class="col-md-6">
                         <div class="form-group">

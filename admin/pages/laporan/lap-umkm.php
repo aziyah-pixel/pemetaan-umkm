@@ -261,7 +261,7 @@ $dataUmkm = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <i class="mdi mdi-store text-primary"></i>
                   Daftar UMKM
                 </h3>
-                <a href="tambah_umkm.php" class="btn btn-primary mt-2 mt-sm-0 btn-icon-text text-center">
+                <a href="cetak_laporan.php" class="btn btn-primary mt-2 mt-sm-0 btn-icon-text text-center" target="blank">
                 <i class="mdi mdi-file-document-outline "></i> Cetak
                 </a>
               </div>

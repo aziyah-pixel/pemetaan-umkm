@@ -249,9 +249,14 @@ $dataPenguna = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <i class="mdi mdi-account-group text-primary"></i>                 
                  Data Operator
                 </h3>
+                <div class="">
                 <a href="tambah_operator.php" class="btn btn-success mt-2 mt-sm-0 btn-icon-text text-center">
                   <i class="mdi mdi-plus-circle"></i> Tambah
                 </a>
+                <a href="cetak_operator.php" class="btn btn-primary mt-2 mt-sm-0 btn-icon-text text-center" target="blank">
+                <i class="mdi mdi-file-document-outline "></i> Cetak
+                </a>
+                </div>
               </div>
               
               <?php if (isset($_GET['msg']) && $_GET['msg'] == 'notfound'): ?>
@@ -310,6 +315,7 @@ $dataPenguna = $stmt->fetchAll(PDO::FETCH_ASSOC);
                       <th>No</th>
                       <th>Nama Lengkap</th>
                       <th>Username</th>
+                      <th>Email</th>
                       <th>Alamat</th>
                       <th>Status</th>
 
@@ -325,6 +331,7 @@ $dataPenguna = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td><?= htmlspecialchars($data['nama_penguna']); ?></td>
                             <td><?= htmlspecialchars($data['username']); ?></td>
                             <td><?= htmlspecialchars($data['email_penguna']); ?></td>
+                            <td><?= htmlspecialchars($data['alamat_penguna']); ?></td>
                             <td><?= htmlspecialchars($data['status']); ?></td>
 
                             <td class="text-center">

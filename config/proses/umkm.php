@@ -29,7 +29,8 @@ if ($aksi === 'tambah') {
     'rt_umkm',
     'rw_umkm',
     'alamat_umkm',
-    'operator'
+    'operator',
+    'id_operator'
   ];
 
   foreach ($required as $field) {
@@ -56,6 +57,7 @@ if ($aksi === 'tambah') {
   $rw_umkm           = trim($_POST['rw_umkm']);
   $alamat_umkm       = trim($_POST['alamat_umkm']);
   $operator          = trim($_POST['operator']);
+  $id_penguna          = trim($_POST['id_operator']);
 
   /* ==========================
      PROSES FOTO
@@ -96,11 +98,11 @@ if ($aksi === 'tambah') {
   $sql = "INSERT INTO umkm (
       kode_umkm, nama_umkm, nama_pemilik, nik, no_hp, email,
       id_usaha, kategori_usaha, id_wilayah,
-      kelurahan, rt, rw, alamat, foto, operator
+      kelurahan, rt, rw, alamat, foto, operator, id_penguna
     ) VALUES (
       :kode_umkm, :nama_umkm, :nama_pemilik, :nik, :no_hp, :email,
       :jenis_usaha, :kategori_usaha, :wilayah,
-      :kelurahan, :rt, :rw, :alamat, :foto, :operator
+      :kelurahan, :rt, :rw, :alamat, :foto, :operator, :id_penguna
     )";
 
   $stmt = $conn->prepare($sql);
@@ -119,7 +121,8 @@ if ($aksi === 'tambah') {
     ':rw'           => $rw_umkm,
     ':alamat'       => $alamat_umkm,
     ':foto'         => $namaFoto,
-    ':operator'     => $operator
+    ':operator'     => $operator,
+    ':id_penguna'     => $id_penguna
   ]);
 
   header("Location: ../../admin/pages/data-umkm/data_umkm.php?msg=added");

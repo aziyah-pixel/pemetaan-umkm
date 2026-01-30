@@ -343,7 +343,7 @@ if (!$umkm) {
                     <i class="mdi mdi-pencil"></i> Edit
                     </a>
                     <a href="export_detail_umkm_pdf.php?id_umkm=<?= $umkm['id_umkm']; ?>" 
-                    class="btn btn-primary t-2 mt-sm-0 btn-icon-text text-center">
+                    class="btn btn-primary t-2 mt-sm-0 btn-icon-text text-center" target="blank">
                     <i class="mdi mdi-file-document-outline "></i> Export PDF
                     </a>
                 </div>
