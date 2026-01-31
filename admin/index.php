@@ -1,6 +1,77 @@
 <?php
+/* ==================================================
+   AUTH & KONEKSI (WAJIB PALING ATAS)
+================================================== */
 require '../config/auth/auth_admin.php';
+require '../config/conn.php';
+
+/* ==================================================
+   SESSION
+================================================== */
+$id_penguna  = $_SESSION['id_penguna'] ?? null;
+$nama_user   = $_SESSION['nama_penguna'] ?? null;
+
+/* ==================================================
+   JUMLAH DATA (CARD DASHBOARD)
+================================================== */
+
+// Jumlah UMKM
+$stmt = $conn->query("SELECT COUNT(*) FROM umkm");
+$jumlah_umkm = $stmt->fetchColumn();
+
+// Jumlah Wilayah
+$stmt = $conn->query("SELECT COUNT(*) FROM wilayah");
+$jumlah_wilayah = $stmt->fetchColumn();
+
+// Jumlah Operator
+$stmt = $conn->query("SELECT COUNT(*) FROM penguna");
+$jumlah_operator = $stmt->fetchColumn();
+
+// Jumlah Jenis Usaha
+$stmt = $conn->query("SELECT COUNT(*) FROM jenis_usaha");
+$jumlah_jenis = $stmt->fetchColumn();
+
+/* ==================================================
+   AREA CHART : UMKM PER WILAYAH
+================================================== */
+$sqlWilayahChart = "
+  SELECT w.wilayah, COUNT(u.id_umkm) AS total
+  FROM wilayah w
+  LEFT JOIN umkm u ON u.id_wilayah = w.id_wilayah
+  GROUP BY w.id_wilayah
+";
+
+$stmt = $conn->query($sqlWilayahChart);
+
+$labelWilayah = [];
+$dataUMKM     = [];
+
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  $labelWilayah[] = $row['wilayah'];
+  $dataUMKM[]     = (int) $row['total'];
+}
+
+/* ==================================================
+   DOUGHNUT CHART : JENIS USAHA
+================================================== */
+$sqlJenisChart = "
+  SELECT j.jenis_usaha, COUNT(u.id_umkm) AS total
+  FROM jenis_usaha j
+  LEFT JOIN umkm u ON u.id_usaha = j.id_usaha
+  GROUP BY j.id_usaha
+";
+
+$stmt = $conn->query($sqlJenisChart);
+
+$labelJenis = [];
+$dataJenis  = [];
+
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  $labelJenis[] = $row['jenis_usaha'];
+  $dataJenis[]  = (int) $row['total'];
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -218,281 +289,116 @@ require '../config/auth/auth_admin.php';
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper pb-0">
-            <div class="page-header flex-wrap">
-              <div class="header-left">
-                <button class="btn btn-primary mb-2 mb-md-0 me-2">Create new document</button>
-                <button class="btn btn-outline-primary bg-white mb-2 mb-md-0">Import documents</button>
-              </div>
-              <div class="header-right d-flex flex-wrap mt-2 mt-sm-0">
-                <div class="d-flex align-items-center">
-                  <a href="#">
-                    <p class="m-0 pe-3">Dashboard</p>
-                  </a>
-                  <a class="ps-3 me-4" href="#">
-                    <p class="m-0">ADE-00234</p>
-                  </a>
-                </div>
-                <button type="button" class="btn btn-primary mt-2 mt-sm-0 btn-icon-text">
-                  <i class="mdi mdi-plus-circle"></i> Add Product </button>
-              </div>
-            </div>
-            <!-- first row starts here -->
-            <div class="row">
-              <div class="col-xl-9 stretch-card grid-margin">
+
+            <!-- ===== CARD ATAS ===== -->
+            <div class="row mb-4">
+
+              <!-- CARD SAMBUTAN -->
+              <div class="col-xl-8 col-md-12 grid-margin">
                 <div class="card">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between flex-wrap">
-                      <div>
-                        <div class="card-title mb-0">Sales Revenue</div>
-                        <h3 class="fw-bold mb-0">$32,409</h3>
-                      </div>
-                      <div>
-                        <div class="d-flex flex-wrap pt-2 justify-content-between sales-header-right">
-                          <div class="d-flex me-5">
-                            <button type="button" class="btn btn-social-icon btn-outline-sales"><i class="mdi mdi-inbox-arrow-down"></i></button>
-                            <div class="ps-2">
-                              <h4 class="mb-0 fw-semibold head-count">$8,217</h4>
-                              <span class="font-10 fw-semibold text-muted">TOTAL SALES</span>
-                            </div>
-                          </div>
-                          <div class="d-flex me-3 mt-2 mt-sm-0">
-                            <button type="button" class="btn btn-social-icon btn-outline-sales profit"><i class="mdi mdi-cash text-info"></i></button>
-                            <div class="ps-2">
-                              <h4 class="mb-0 fw-semibold head-count">2,804</h4>
-                              <span class="font-10 fw-semibold text-muted">TOTAL PROFIT</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                  <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                      <h4 class="fw-bold text-primary">
+                        Selamat <?= htmlspecialchars($nama_user) ?> 🎉
+                      </h4>
+                      <p class="mb-3 text-muted">
+                        Telah ada <strong><?= $jumlah_umkm ?></strong> UMKM yang berhasil didata. Cek data UMKM yang telah di input.
+                      </p>
+                      <a href="pages/data-umkm/data_umkm.php" class=" w-50">
+                        <button type="button" class="btn btn-outline-primary btn-fw">Cek Data</button>
+                      </a>
                     </div>
-                    <p class="text-muted font-13 mt-2 mt-sm-0">Your sales monitoring dashboard template. <a class="text-muted font-13" href="#"><u>Learn more</u></a></p>
-                    <div class="flot-chart-wrapper">
-                      <div id="flotChart" class="flot-chart">
-                        <canvas class="flot-base"></canvas>
-                      </div>
-                    </div>
+                    <img src="asset/images/umkm.svg" alt="" class="w-50">
                   </div>
                 </div>
               </div>
-              <div class="col-xl-3 stretch-card grid-margin">
-                <div class="card card-img">
+
+              <div class="col-md-4 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Aksi Cepat</h4>
+                    <a href="pages/data-umkm/tambah_umkm.php" class="btn btn-primary w-100 mb-2">
+                      <i class="mdi mdi-plus-circle"></i> Tambah UMKM
+                    </a>
+                    <a href="pages/master-data/jenis_usaha.php" class="btn btn-success w-100 mb-2">
+                      <i class="mdi mdi-file-chart"></i> Kelola Master Data
+                    </a>
+
+                    <a href="pages/operator/tambah_operator.php" class="btn btn-warning w-100">
+                      <i class="mdi mdi-account-multiple"></i> Kelola Operator
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+
+              <!-- CARD WILAYAH -->
+              <div class="col-xl-4 col-md-6 grid-margin">
+                <div class="card">
                   <div class="card-body d-flex align-items-center">
-                    <div class="text-white">
-                      <h1 class="font-20 fw-semibold mb-0">Get premium</h1>
-                      <h1 class="font-20 fw-semibold">account!</h1>
-                      <p>to optimize your selling Product</p>
-                      <p class="font-10 fw-semibold">Enjoy the advantage of premium.</p>
-                      <button class="btn bg-white text-dark font-12">Get Premium</button>
+                    <i class="mdi mdi-map-marker-radius mdi-36px text-success me-3"></i>
+                    <div>
+                      <h5 class="mb-0"><?= $jumlah_wilayah ?></h5>
+                      <p class="text-muted mb-0">Wilayah Terdata</p>
                     </div>
                   </div>
                 </div>
               </div>
+
+              <!-- CARD OPERATOR -->
+              <div class="col-xl-4 col-md-6 grid-margin">
+                <div class="card">
+                  <div class="card-body d-flex align-items-center">
+                    <i class="mdi mdi-account-group mdi-36px text-warning me-3"></i>
+                    <div>
+                      <h5 class="mb-0"><?= $jumlah_operator ?></h5>
+                      <p class="text-muted mb-0">Operator Aktif</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CARD JENIS USAHA -->
+              <div class="col-xl-4 col-md-6 grid-margin">
+                <div class="card">
+                  <div class="card-body d-flex align-items-center">
+                    <i class="mdi mdi-briefcase mdi-36px text-primary me-3"></i>
+                    <div>
+                      <h5 class="mb-0"><?= $jumlah_jenis ?></h5>
+                      <p class="text-muted mb-0">Jenis Usaha</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
-            <!-- image card row starts here -->
+
             <div class="row">
-              <div class="col-sm-4 stretch-card grid-margin">
+              <div class="col-lg-6 grid-margin stretch-card">
                 <div class="card">
-                  <div class="card-body p-0">
-                    <img class="img-fluid w-100" src="../assets/images/dashboard/img_1.jpg" alt="">
-                  </div>
-                  <div class="card-body px-3 text-dark">
-                    <div class="d-flex justify-content-between">
-                      <p class="text-muted font-13 mb-0">ENTIRE APARTMENT</p>
-                      <i class="mdi mdi-heart-outline"></i>
-                    </div>
-                    <h5 class="fw-semibold">Cosy Studio flat in London</h5>
-                    <div class="d-flex justify-content-between fw-semibold">
-                      <p class="mb-0"><i class="mdi mdi-star star-color pe-1"></i>4.60 (35)</p>
-                      <p class="mb-0">$5,267/night</p>
-                    </div>
+                  <div class="card-body">
+                    <h4 class="card-title">UMKM per Wilayah</h4>
+                    <canvas id="areaChart" height="250"></canvas>
                   </div>
                 </div>
               </div>
-              <div class="col-sm-4 stretch-card grid-margin">
+
+              <div class="col-lg-6 grid-margin stretch-card">
                 <div class="card">
-                  <div class="card-body p-0">
-                    <img class="img-fluid w-100" src="../assets/images/dashboard/img_2.jpg" alt="">
-                  </div>
-                  <div class="card-body px-3 text-dark">
-                    <div class="d-flex justify-content-between">
-                      <p class="text-muted font-13 mb-0">ENTIRE APARTMENT</p>
-                      <i class="mdi mdi-heart-outline"></i>
-                    </div>
-                    <h5 class="fw-semibold">Victoria Bedsit Studio Ensuite</h5>
-                    <div class="d-flex justify-content-between fw-semibold">
-                      <p class="mb-0"><i class="mdi mdi-star star-color pe-1"></i>4.83 (12)</p>
-                      <p class="mb-0">$6,144/night</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-4 stretch-card grid-margin">
-                <div class="card">
-                  <div class="card-body p-0">
-                    <img class="img-fluid w-100" src="../assets/images/dashboard/img_3.jpg" alt="">
-                  </div>
-                  <div class="card-body px-3 text-dark">
-                    <div class="d-flex justify-content-between">
-                      <p class="text-muted font-13 mb-0">ENTIRE APARTMENT</p>
-                      <i class="mdi mdi-heart-outline"></i>
-                    </div>
-                    <h5 class="fw-semibold">Fabulous Huge Room </h5>
-                    <div class="d-flex justify-content-between fw-semibold">
-                      <p class="mb-0"><i class="mdi mdi-star star-color pe-1"></i>3.83 (15)</p>
-                      <p class="mb-0">$5,267/night</p>
+                  <div class="card-body">
+                    <h4 class="card-title">Distribusi Jenis Usaha</h4>
+                    <div class="d-flex justify-content-center">
+                      <canvas id="doughnutChart" height="250"></canvas>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-sm-6 col-xl-4 stretch-card grid-margin">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="card-title mb-2"> Upcoming events (3) </div>
-                    <h3 class="mb-3">23 september 2019</h3>
-                    <div class="d-flex border-bottom border-top py-3">
-                      <div class="form-check">
-                        <label class="form-check-label">
-                          <input type="checkbox" class="form-check-input" checked></label>
-                      </div>
-                      <div class="ps-2">
-                        <span class="font-12 text-muted">Tue, Mar 5, 9.30am</span>
-                        <p class="m-0 text-black">Hey I attached some new PSD files…</p>
-                      </div>
-                    </div>
-                    <div class="d-flex border-bottom py-3">
-                      <div class="form-check">
-                        <label class="form-check-label">
-                          <input type="checkbox" class="form-check-input"></label>
-                      </div>
-                      <div class="ps-2">
-                        <span class="font-12 text-muted">Mon, Mar 11, 4.30 PM</span>
-                        <p class="m-0 text-black">Discuss performance with manager</p>
-                      </div>
-                    </div>
-                    <div class="d-flex border-bottom py-3">
-                      <div class="form-check">
-                        <label class="form-check-label">
-                          <input type="checkbox" class="form-check-input"></label>
-                      </div>
-                      <div class="ps-2">
-                        <span class="font-12 text-muted">Tue, Mar 5, 9.30am</span>
-                        <p class="m-0 text-black">Meeting with Alisa </p>
-                      </div>
-                    </div>
-                    <div class="d-flex pt-3">
-                      <div class="form-check">
-                        <label class="form-check-label">
-                          <input type="checkbox" class="form-check-input"></label>
-                      </div>
-                      <div class="ps-2">
-                        <span class="font-12 text-muted">Mon, Mar 11, 4.30 PM</span>
-                        <p class="m-0 text-black">Hey I attached some new PSD files…</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 col-xl-4 stretch-card grid-margin">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="d-flex border-bottom mb-4 pb-2">
-                      <div class="hexagon">
-                        <div class="hex-mid hexagon-warning">
-                          <i class="mdi mdi-clock-outline"></i>
-                        </div>
-                      </div>
-                      <div class="ps-4">
-                        <h4 class="fw-bold text-warning mb-0">12.45</h4>
-                        <h6 class="text-muted">Schedule Meeting </h6>
-                      </div>
-                    </div>
-                    <div class="d-flex border-bottom mb-4 pb-2">
-                      <div class="hexagon">
-                        <div class="hex-mid hexagon-danger">
-                          <i class="mdi mdi-account-outline"></i>
-                        </div>
-                      </div>
-                      <div class="ps-4">
-                        <h4 class="fw-bold text-danger mb-0">34568</h4>
-                        <h6 class="text-muted">Profile Visits</h6>
-                      </div>
-                    </div>
-                    <div class="d-flex border-bottom mb-4 pb-2">
-                      <div class="hexagon">
-                        <div class="hex-mid hexagon-success">
-                          <i class="mdi mdi-laptop"></i>
-                        </div>
-                      </div>
-                      <div class="ps-4">
-                        <h4 class="fw-bold text-success mb-0">33.50%</h4>
-                        <h6 class="text-muted">Bounce Rate</h6>
-                      </div>
-                    </div>
-                    <div class="d-flex border-bottom mb-4 pb-2">
-                      <div class="hexagon">
-                        <div class="hex-mid hexagon-info">
-                          <i class="mdi mdi-clock-outline"></i>
-                        </div>
-                      </div>
-                      <div class="ps-4">
-                        <h4 class="fw-bold text-info mb-0">12.45</h4>
-                        <h6 class="text-muted">Schedule Meeting</h6>
-                      </div>
-                    </div>
-                    <div class="d-flex">
-                      <div class="hexagon">
-                        <div class="hex-mid hexagon-primary">
-                          <i class="mdi mdi-timer-sand"></i>
-                        </div>
-                      </div>
-                      <div class="ps-4">
-                        <h4 class="fw-bold text-primary mb-0">12.45</h4>
-                        <h6 class="text-muted mb-0">Browser Usage</h6>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 col-xl-4 stretch-card grid-margin">
-                <div class="card color-card-wrapper">
-                  <div class="card-body">
-                    <img class="img-fluid card-top-img w-100" src="../assets/images/dashboard/img_5.jpg" alt="">
-                    <div class="d-flex flex-wrap justify-content-around color-card-outer">
-                      <div class="col-6 p-0 mb-4">
-                        <div class="color-card primary m-auto">
-                          <i class="mdi mdi-clock-outline"></i>
-                          <p class="fw-semibold mb-0">Delivered</p>
-                          <span class="small">15 Packages</span>
-                        </div>
-                      </div>
-                      <div class="col-6 p-0 mb-4">
-                        <div class="color-card bg-success  m-auto">
-                          <i class="mdi mdi-tshirt-crew"></i>
-                          <p class="fw-semibold mb-0">Ordered</p>
-                          <span class="small">72 Items</span>
-                        </div>
-                      </div>
-                      <div class="col-6 p-0">
-                        <div class="color-card bg-info m-auto">
-                          <i class="mdi mdi-trophy-outline"></i>
-                          <p class="fw-semibold mb-0">Arrived</p>
-                          <span class="small">34 Upgraded</span>
-                        </div>
-                      </div>
-                      <div class="col-6 p-0">
-                        <div class="color-card bg-danger m-auto">
-                          <i class="mdi mdi-presentation"></i>
-                          <p class="fw-semibold mb-0">Reported</p>
-                          <span class="small">72 Support</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+
+          
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
@@ -533,5 +439,82 @@ require '../config/auth/auth_admin.php';
     <script src="../assets/js/proBanner.js"></script>
     <script src="../assets/js/dashboard.js"></script>
     <!-- End custom js for this page -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+/* ===== AREA CHART : UMKM PER WILAYAH ===== */
+const areaCtx = document.getElementById('areaChart').getContext('2d');
+new Chart(areaCtx, {
+  type: 'line',
+  data: {
+    labels: <?= json_encode($labelWilayah) ?>,
+    datasets: [{
+      label: 'Jumlah UMKM',
+      data: <?= json_encode($dataUMKM) ?>,
+      fill: true,
+      backgroundColor: 'rgba(33, 150, 243, 0.2)', // biru lembut
+      borderColor: 'rgba(33, 150, 243, 1)',       // biru utama
+      pointBackgroundColor: 'rgba(33, 150, 243, 1)',
+      pointBorderColor: '#ffffff',
+      pointRadius: 4,
+      tension: 0.4
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: 'rgba(0, 0, 0, 0.05)'
+        }
+      },
+      x: {
+        grid: {
+          display: false
+        }
+      }
+    }
+  }
+});
+
+/* ===== DOUGHNUT CHART : JENIS USAHA ===== */
+const doughnutCtx = document.getElementById('doughnutChart').getContext('2d');
+new Chart(doughnutCtx, {
+  type: 'doughnut',
+  data: {
+    labels: <?= json_encode($labelJenis) ?>,
+    datasets: [{
+      data: <?= json_encode($dataJenis) ?>,
+      backgroundColor: [
+        '#1E88E5', // biru tua
+        '#42A5F5', // biru sedang
+        '#90CAF9', // biru muda
+        '#64B5F6', // biru soft
+        '#BBDEFB', // biru sangat muda
+        '#0D47A1'  // biru gelap
+      ],
+      borderWidth: 1,
+      borderColor: '#ffffff'
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          padding: 20,
+          boxWidth: 12
+        }
+      }
+    },
+    cutout: '65%' // bikin doughnut lebih modern
+  }
+});
+</script>
+
   </body>
 </html>
